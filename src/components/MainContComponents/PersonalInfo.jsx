@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { updatePersonalInfo, updateField } from '../../store/slices/personalInfoSlice';
+import { updateField } from '../../store/slices/personalInfoSlice';
 
 const PersonalInfo = () => {
   // State management
@@ -16,6 +16,15 @@ const PersonalInfo = () => {
   // Handle input changes
   const handleInputChange = (field, value) => {
     dispatch(updateField({ field, value }));
+  };
+
+  const isValidURL = (string) => {
+    try {
+      new URL(string);
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   // Form validation
@@ -37,6 +46,13 @@ const PersonalInfo = () => {
     if (personalInfo.phone && !phoneRegex.test(personalInfo.phone)) {
       errors.phone = 'Please enter a valid phone number';
     }
+
+    const urlFields = ['linkedIn', 'github', 'website'];
+    urlFields.forEach(field => {
+      if(personalInfo[field] && !isValidURL(personalInfo[field])) {
+        errors[field] = 'Please enter a valid URL';
+      }
+    });
     
     return errors;
   };

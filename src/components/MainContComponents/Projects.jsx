@@ -1,127 +1,60 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { 
+  addProject, 
+  removeProject, 
+  updateProject, 
+  updateProjectHighlight,
+  addProjectHighlight,
+  removeProjectHighlight,
+  duplicateProject
+} from '../../store/slices/projectsSlice';
 
-const Projects = ({ onDataChange, initialData = [] }) => {
-  // State management
+const Projects = () => { 
   const [isExpanded, setIsExpanded] = useState(false);
-  const [projects, setProjects] = useState(
-    initialData.length > 0 ? initialData : [
-      {
-        id: Date.now(),
-        name: '',
-        technologies: '',
-        url: '',
-        github: '',
-        description: '',
-        startDate: '',
-        endDate: '',
-        status: 'completed', // completed, ongoing, planned
-        highlights: ['']
-      }
-    ]
-  );
+
+  // Get data from Redux store
+  const dispatch = useAppDispatch();
+  const { projects } = useAppSelector(state => state.projects);
 
   // Toggle section visibility
   const toggleSection = () => {
     setIsExpanded(!isExpanded);
   };
 
-  // Handle input changes for specific project and field
   const handleInputChange = (projectId, field, value) => {
-    setProjects(prevProjects => 
-      prevProjects.map(project => 
-        project.id === projectId 
-          ? { ...project, [field]: value }
-          : project
-      )
-    );
+    dispatch(updateProject({ id: projectId, field, value }));
   };
 
-  // Handle highlights array changes
   const handleHighlightChange = (projectId, highlightIndex, value) => {
-    setProjects(prevProjects => 
-      prevProjects.map(project => 
-        project.id === projectId 
-          ? {
-              ...project,
-              highlights: project.highlights.map((highlight, index) => 
-                index === highlightIndex ? value : highlight
-              )
-            }
-          : project
-      )
-    );
+    dispatch(updateProjectHighlight({ projectId, highlightIndex, value }));
   };
 
-  // Add new highlight to project
-  const addHighlight = (projectId) => {
-    setProjects(prevProjects => 
-      prevProjects.map(project => 
-        project.id === projectId 
-          ? { ...project, highlights: [...project.highlights, ''] }
-          : project
-      )
-    );
+  // Add new highlight to project - dispatch Redux action
+  const handleAddHighlight = (projectId) => {
+    dispatch(addProjectHighlight(projectId));
   };
 
-  // Remove highlight from project
-  const removeHighlight = (projectId, highlightIndex) => {
-    setProjects(prevProjects => 
-      prevProjects.map(project => 
-        project.id === projectId 
-          ? {
-              ...project,
-              highlights: project.highlights.filter((_, index) => index !== highlightIndex)
-            }
-          : project
-      )
-    );
+  // Remove highlight from project - dispatch Redux action
+  const handleRemoveHighlight = (projectId, highlightIndex) => {
+    dispatch(removeProjectHighlight({ projectId, highlightIndex }));
   };
 
-  // Add new project
-  const addProject = () => {
-    const newProject = {
-      id: Date.now(),
-      name: '',
-      technologies: '',
-      url: '',
-      github: '',
-      description: '',
-      startDate: '',
-      endDate: '',
-      status: 'completed',
-      highlights: ['']
-    };
-    setProjects([...projects, newProject]);
+  // Add new project - dispatch Redux action
+  const handleAddProject = () => {
+    dispatch(addProject());
   };
 
-  // Remove project
-  const removeProject = (projectId) => {
-    if (projects.length > 1) {
-      setProjects(projects.filter(project => project.id !== projectId));
-    }
+  // Remove project - dispatch Redux action
+  const handleRemoveProject = (projectId) => {
+    dispatch(removeProject(projectId));
   };
 
-  // Duplicate project
-  const duplicateProject = (projectId) => {
-    const projectToDuplicate = projects.find(p => p.id === projectId);
-    if (projectToDuplicate) {
-      const duplicatedProject = {
-        ...projectToDuplicate,
-        id: Date.now(),
-        name: `${projectToDuplicate.name} (Copy)`,
-      };
-      setProjects([...projects, duplicatedProject]);
-    }
+  // Duplicate project - dispatch Redux action
+  const handleDuplicateProject = (projectId) => {
+    dispatch(duplicateProject(projectId));
   };
 
-  // Notify parent component of data changes
-  useEffect(() => {
-    if (onDataChange) {
-      onDataChange(projects);
-    }
-  }, [projects, onDataChange]);
-
-  // Form validation
   const validateProject = (project) => {
     const errors = {};
     if (!project.name.trim()) errors.name = 'Project name is required';
@@ -139,7 +72,7 @@ const Projects = ({ onDataChange, initialData = [] }) => {
     return errors;
   };
 
-  // URL validation helper
+  // URL validation helper - keep as is
   const isValidUrl = (string) => {
     try {
       new URL(string);
@@ -149,7 +82,7 @@ const Projects = ({ onDataChange, initialData = [] }) => {
     }
   };
 
-  // Get project status color
+  // Get project status color - keep as is
   const getStatusColor = (status) => {
     const colors = {
       completed: 'bg-green-100 text-green-800',
@@ -159,7 +92,7 @@ const Projects = ({ onDataChange, initialData = [] }) => {
     return colors[status] || 'bg-gray-100 text-gray-800';
   };
 
-  // Enhanced form fields configuration
+  // Enhanced form fields configuration - keep as is
   const projectsArr = [
     {
       label: "Project Name",
@@ -231,7 +164,7 @@ const Projects = ({ onDataChange, initialData = [] }) => {
                   </div>
                   <div className='flex items-center space-x-2'>
                     <button
-                      onClick={() => duplicateProject(project.id)}
+                      onClick={() => handleDuplicateProject(project.id)}
                       className='text-blue-500 hover:text-blue-700 text-sm'
                       title='Duplicate project'
                     >
@@ -241,7 +174,7 @@ const Projects = ({ onDataChange, initialData = [] }) => {
                     </button>
                     {projects.length > 1 && (
                       <button
-                        onClick={() => removeProject(project.id)}
+                        onClick={() => handleRemoveProject(project.id)}
                         className='text-red-500 hover:text-red-700 text-sm'
                         title='Remove project'
                       >
@@ -363,7 +296,7 @@ const Projects = ({ onDataChange, initialData = [] }) => {
                         />
                         {project.highlights.length > 1 && (
                           <button
-                            onClick={() => removeHighlight(project.id, highlightIndex)}
+                            onClick={() => handleRemoveHighlight(project.id, highlightIndex)}
                             className='text-red-500 hover:text-red-700'
                           >
                             <svg className='w-4 h-4' fill='currentColor' viewBox='0 0 20 20'>
@@ -374,7 +307,7 @@ const Projects = ({ onDataChange, initialData = [] }) => {
                       </div>
                     ))}
                     <button
-                      onClick={() => addHighlight(project.id)}
+                      onClick={() => handleAddHighlight(project.id)}
                       className='flex items-center text-sm text-[#0284c7] hover:text-[#075985]'
                     >
                       <svg className='w-4 h-4 mr-1' fill='currentColor' viewBox='0 0 20 20'>
@@ -392,7 +325,7 @@ const Projects = ({ onDataChange, initialData = [] }) => {
         {/* Add Project Button */}
         <button 
           type='button' 
-          onClick={addProject}
+          onClick={handleAddProject}
           className='flex items-center text-sm text-[#0284c7] hover:text-[#075985] mt-4 transition-colors duration-200'
         >
           <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 mr-1' viewBox='0 0 20 20' fill='currentColor'>

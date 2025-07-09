@@ -1,82 +1,41 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { 
+  addEducation, 
+  removeEducation, 
+  updateEducation, 
+  updateEducationCurrentStatus
+} from '../../store/slices/educationSlice';
 
-const Education = ({ onDataChange, initialData = [] }) => {
-  // State management
+const Education = () => { 
   const [isExpanded, setIsExpanded] = useState(false);
-  const [educationEntries, setEducationEntries] = useState(
-    initialData.length > 0 ? initialData : [
-      {
-        id: Date.now(),
-        institution: '',
-        degree: '',
-        startDate: '',
-        endDate: '',
-        description: '',
-        gpa: '',
-        location: '',
-        current: false
-      }
-    ]
-  );
 
-  // Toggle section visibility
+  const dispatch = useAppDispatch();
+  const { educationEntries } = useAppSelector(state => state.education);
+
   const toggleSection = () => {
     setIsExpanded(!isExpanded);
   };
 
-  // Handle input changes for specific education entry and field
   const handleInputChange = (educationId, field, value) => {
-    setEducationEntries(prevEntries => 
-      prevEntries.map(entry => 
-        entry.id === educationId 
-          ? { ...entry, [field]: value }
-          : entry
-      )
-    );
+    dispatch(updateEducation({ id: educationId, field, value }));
   };
 
-  // Handle current education checkbox
+  // Handle current education checkbox - dispatch Redux action
   const handleCurrentChange = (educationId, isCurrent) => {
-    setEducationEntries(prevEntries => 
-      prevEntries.map(entry => 
-        entry.id === educationId 
-          ? { ...entry, current: isCurrent, endDate: isCurrent ? '' : entry.endDate }
-          : entry
-      )
-    );
+    dispatch(updateEducationCurrentStatus({ id: educationId, current: isCurrent }));
   };
 
-  // Add new education entry
-  const addEducation = () => {
-    const newEducation = {
-      id: Date.now(),
-      institution: '',
-      degree: '',
-      startDate: '',
-      endDate: '',
-      description: '',
-      gpa: '',
-      location: '',
-      current: false
-    };
-    setEducationEntries([...educationEntries, newEducation]);
+  // Add new education entry - dispatch Redux action
+  const handleAddEducation = () => {
+    dispatch(addEducation());
   };
 
-  // Remove education entry
-  const removeEducation = (educationId) => {
-    if (educationEntries.length > 1) {
-      setEducationEntries(educationEntries.filter(entry => entry.id !== educationId));
-    }
+  // Remove education entry - dispatch Redux action
+  const handleRemoveEducation = (educationId) => {
+    dispatch(removeEducation(educationId));
   };
 
-  // Notify parent component of data changes
-  useEffect(() => {
-    if (onDataChange) {
-      onDataChange(educationEntries);
-    }
-  }, [educationEntries, onDataChange]);
-
-  // Form validation
   const validateEducation = (education) => {
     const errors = {};
     if (!education.institution.trim()) errors.institution = 'Institution is required';
@@ -86,7 +45,7 @@ const Education = ({ onDataChange, initialData = [] }) => {
     return errors;
   };
 
-  // Enhanced form fields configuration
+  // Enhanced form fields configuration - keep as is
   const educationItems = [
     {
       id: "institution",
@@ -126,7 +85,7 @@ const Education = ({ onDataChange, initialData = [] }) => {
         onClick={toggleSection}
         type="button"
       >
-        <span>Education</span>
+        <span>Education ({educationEntries.length})</span>
         <svg 
           xmlns='http://www.w3.org/2000/svg' 
           className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
@@ -154,7 +113,7 @@ const Education = ({ onDataChange, initialData = [] }) => {
                   {educationEntries.length > 1 && (
                     <button
                       type="button"
-                      onClick={() => removeEducation(education.id)}
+                      onClick={() => handleRemoveEducation(education.id)}
                       className='text-red-500 hover:text-red-700 text-sm flex items-center'
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -265,7 +224,7 @@ const Education = ({ onDataChange, initialData = [] }) => {
         {/* Add Education Button */}
         <button 
           type='button' 
-          onClick={addEducation}
+          onClick={handleAddEducation}
           className='flex items-center text-sm text-[#0284c7] hover:text-[#075985] mt-2 transition-colors duration-200'
         >
           <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 mr-1' viewBox='0 0 20 20' fill='currentColor'>

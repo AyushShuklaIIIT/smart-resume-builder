@@ -1,75 +1,46 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { 
+  addAchievement, 
+  removeAchievement, 
+  updateAchievement, 
+  addBulkAchievements,
+  duplicateAchievement,
+  sortAchievements
+} from '../../store/slices/achievementsSlice';
 
-const Achievements = ({ onDataChange, initialData = [] }) => {
-  // State management
+const Achievements = () => { 
   const [isExpanded, setIsExpanded] = useState(false);
-  const [achievements, setAchievements] = useState(
-    initialData.length > 0 ? initialData : [
-      {
-        id: Date.now(),
-        title: '',
-        description: '',
-        date: '',
-        category: 'professional',
-        organization: '',
-        url: '',
-        importance: 'medium'
-      }
-    ]
-  );
+
+  // Get data from Redux store
+  const dispatch = useAppDispatch();
+  const { achievements } = useAppSelector(state => state.achievements);
 
   // Toggle section visibility
   const toggleSection = () => {
     setIsExpanded(!isExpanded);
   };
 
-  // Handle input changes for specific achievement and field
   const handleInputChange = (achievementId, field, value) => {
-    setAchievements(prevAchievements => 
-      prevAchievements.map(achievement => 
-        achievement.id === achievementId 
-          ? { ...achievement, [field]: value }
-          : achievement
-      )
-    );
+    dispatch(updateAchievement({ id: achievementId, field, value }));
   };
 
-  // Add new achievement
-  const addAchievement = () => {
-    const newAchievement = {
-      id: Date.now(),
-      title: '',
-      description: '',
-      date: '',
-      category: 'professional',
-      organization: '',
-      url: '',
-      importance: 'medium'
-    };
-    setAchievements([...achievements, newAchievement]);
+  // Add new achievement - dispatch Redux action
+  const handleAddAchievement = () => {
+    dispatch(addAchievement());
   };
 
-  // Remove achievement
-  const removeAchievement = (achievementId) => {
-    if (achievements.length > 1) {
-      setAchievements(achievements.filter(achievement => achievement.id !== achievementId));
-    }
+  // Remove achievement - dispatch Redux action
+  const handleRemoveAchievement = (achievementId) => {
+    dispatch(removeAchievement(achievementId));
   };
 
-  // Duplicate achievement
-  const duplicateAchievement = (achievementId) => {
-    const achievementToDuplicate = achievements.find(a => a.id === achievementId);
-    if (achievementToDuplicate) {
-      const duplicatedAchievement = {
-        ...achievementToDuplicate,
-        id: Date.now(),
-        title: `${achievementToDuplicate.title} (Copy)`,
-      };
-      setAchievements([...achievements, duplicatedAchievement]);
-    }
+  // Duplicate achievement - dispatch Redux action
+  const handleDuplicateAchievement = (achievementId) => {
+    dispatch(duplicateAchievement(achievementId));
   };
 
-  // Bulk add achievements from textarea
+  // Bulk add achievements - dispatch Redux action
   const handleBulkAdd = (textContent) => {
     if (textContent.trim()) {
       const achievementTitles = textContent
@@ -77,45 +48,17 @@ const Achievements = ({ onDataChange, initialData = [] }) => {
         .map(line => line.trim())
         .filter(line => line);
 
-      const newAchievements = achievementTitles.map(title => ({
-        id: Date.now() + Math.random(),
-        title: title,
-        description: '',
-        date: '',
-        category: 'professional',
-        organization: '',
-        url: '',
-        importance: 'medium'
-      }));
-
-      setAchievements([...achievements, ...newAchievements]);
-    }
-  };
-
-  // Sort achievements by importance and date
-  const sortAchievements = (sortBy) => {
-    const sorted = [...achievements].sort((a, b) => {
-      if (sortBy === 'importance') {
-        const importanceOrder = { high: 3, medium: 2, low: 1 };
-        return importanceOrder[b.importance] - importanceOrder[a.importance];
-      } else if (sortBy === 'date') {
-        return new Date(b.date || '1900-01-01') - new Date(a.date || '1900-01-01');
-      } else if (sortBy === 'category') {
-        return a.category.localeCompare(b.category);
+      if (achievementTitles.length > 0) {
+        dispatch(addBulkAchievements(achievementTitles));
       }
-      return 0;
-    });
-    setAchievements(sorted);
+    }
   };
 
-  // Notify parent component of data changes
-  useEffect(() => {
-    if (onDataChange) {
-      onDataChange(achievements);
-    }
-  }, [achievements, onDataChange]);
+  // Sort achievements - dispatch Redux action
+  const handleSortAchievements = (sortBy) => {
+    dispatch(sortAchievements(sortBy));
+  };
 
-  // Form validation
   const validateAchievement = (achievement) => {
     const errors = {};
     if (!achievement.title.trim()) errors.title = 'Achievement title is required';
@@ -125,7 +68,7 @@ const Achievements = ({ onDataChange, initialData = [] }) => {
     return errors;
   };
 
-  // URL validation helper
+  // URL validation helper - keep as is
   const isValidUrl = (string) => {
     try {
       new URL(string);
@@ -135,7 +78,7 @@ const Achievements = ({ onDataChange, initialData = [] }) => {
     }
   };
 
-  // Get category color
+  // Get category color - keep as is
   const getCategoryColor = (category) => {
     const colors = {
       professional: 'bg-blue-100 text-blue-800',
@@ -148,7 +91,7 @@ const Achievements = ({ onDataChange, initialData = [] }) => {
     return colors[category] || 'bg-gray-100 text-gray-800';
   };
 
-  // Get importance color
+  // Get importance color - keep as is
   const getImportanceColor = (importance) => {
     const colors = {
       high: 'bg-red-100 text-red-800',
@@ -158,7 +101,7 @@ const Achievements = ({ onDataChange, initialData = [] }) => {
     return colors[importance] || 'bg-gray-100 text-gray-800';
   };
 
-  // Achievement categories
+  // Achievement categories - keep as is
   const categories = [
     { value: 'professional', label: 'Professional' },
     { value: 'academic', label: 'Academic' },
@@ -168,7 +111,7 @@ const Achievements = ({ onDataChange, initialData = [] }) => {
     { value: 'personal', label: 'Personal' }
   ];
 
-  // Importance levels
+  // Importance levels - keep as is
   const importanceLevels = [
     { value: 'high', label: 'High' },
     { value: 'medium', label: 'Medium' },
@@ -199,19 +142,19 @@ const Achievements = ({ onDataChange, initialData = [] }) => {
         {/* Quick actions */}
         <div className='mb-4 flex flex-wrap gap-2'>
           <button
-            onClick={() => sortAchievements('importance')}
+            onClick={() => handleSortAchievements('importance')}
             className='px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200'
           >
             Sort by Importance
           </button>
           <button
-            onClick={() => sortAchievements('date')}
+            onClick={() => handleSortAchievements('date')}
             className='px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200'
           >
             Sort by Date
           </button>
           <button
-            onClick={() => sortAchievements('category')}
+            onClick={() => handleSortAchievements('category')}
             className='px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200'
           >
             Sort by Category
@@ -261,7 +204,7 @@ const Achievements = ({ onDataChange, initialData = [] }) => {
                   </div>
                   <div className='flex items-center space-x-2'>
                     <button
-                      onClick={() => duplicateAchievement(achievement.id)}
+                      onClick={() => handleDuplicateAchievement(achievement.id)}
                       className='text-blue-500 hover:text-blue-700 text-sm'
                       title='Duplicate achievement'
                     >
@@ -271,7 +214,7 @@ const Achievements = ({ onDataChange, initialData = [] }) => {
                     </button>
                     {achievements.length > 1 && (
                       <button
-                        onClick={() => removeAchievement(achievement.id)}
+                        onClick={() => handleRemoveAchievement(achievement.id)}
                         className='text-red-500 hover:text-red-700 text-sm'
                         title='Remove achievement'
                       >
@@ -412,7 +355,7 @@ const Achievements = ({ onDataChange, initialData = [] }) => {
         {/* Add Achievement Button */}
         <button 
           type='button' 
-          onClick={addAchievement}
+          onClick={handleAddAchievement}
           className='flex items-center text-sm text-[#0284c7] hover:text-[#075985] mt-4 transition-colors duration-200'
         >
           <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 mr-1' viewBox='0 0 20 20' fill='currentColor'>
