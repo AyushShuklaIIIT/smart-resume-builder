@@ -4,6 +4,7 @@ import Education from './Education'
 import Experience from './Experience'
 import Skills from './Skills'
 import Projects from './Projects'
+import Achievements from './Achievements'
 
 const LeftPanel = () => {
   return (
@@ -15,6 +16,7 @@ const LeftPanel = () => {
         <Experience></Experience>
         <Skills></Skills>
         <Projects></Projects>
+        <Achievements></Achievements>
       </div>
     </div>
   )

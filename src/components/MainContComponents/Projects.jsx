@@ -144,7 +144,7 @@ const Projects = ({ onDataChange, initialData = [] }) => {
     try {
       new URL(string);
       return true;
-    } catch (_) {
+    } catch {
       return false;
     }
   };
@@ -345,13 +345,17 @@ const Projects = ({ onDataChange, initialData = [] }) => {
 
                   {/* Key highlights */}
                   <div className='md:col-span-2'>
-                    <label className='block text-sm font-medium text-gray-700 mb-1'>
+                    <label 
+                      htmlFor={`highlight-${project.id}-0`} 
+                      className='block text-sm font-medium text-gray-700 mb-1'
+                    >
                       Key Highlights & Features
                     </label>
                     {project.highlights.map((highlight, highlightIndex) => (
-                      <div key={highlightIndex} className='flex items-center space-x-2 mb-2'>
+                      <div key={`${project.id}-highlight-${highlightIndex}`} className='flex items-center space-x-2 mb-2'>
                         <input
                           type="text"
+                          id={`highlight-${project.id}-${highlightIndex}`}
                           value={highlight}
                           onChange={(e) => handleHighlightChange(project.id, highlightIndex, e.target.value)}
                           placeholder='e.g., Implemented user authentication system'
