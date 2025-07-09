@@ -260,9 +260,9 @@ const RightPanel = () => {
                 Skills
               </h2>
               <div className='skills-list flex flex-wrap gap-2'>
-                {getAllSkills().map((skill, index) => (
+                {getAllSkills().map((skill) => (
                   <span 
-                    key={index}
+                    key={skill}
                     className='bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full'
                   >
                     {skill}
@@ -304,8 +304,8 @@ const RightPanel = () => {
                     {project.highlights && project.highlights.length > 0 && project.highlights.some(h => h.trim()) && (
                       <div className='mt-2'>
                         <ul className='text-gray-700 text-sm space-y-1'>
-                          {project.highlights.filter(h => h.trim()).map((highlight, idx) => (
-                            <li key={idx} className='flex items-start'>
+                          {project.highlights.filter(h => h.trim()).map((highlight) => (
+                            <li key={highlight} className='flex items-start'>
                               <span className='mr-2 text-gray-400'>•</span>
                               <span>{highlight}</span>
                             </li>

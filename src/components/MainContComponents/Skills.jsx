@@ -1,38 +1,29 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { addSkill, removeSkill, addBulkSkills } from '../../store/slices/skillsSlice';
 
-const Skills = ({ onDataChange, initialData = {} }) => {
+const Skills = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [skillsData, setSkillsData] = useState({
-    technical: [],
-    programming: [],
-    tools: [],
-    soft: [],
-    languages: [],
-    ...initialData
-  });
   const [activeCategory, setActiveCategory] = useState('technical');
   const [newSkill, setNewSkill] = useState('');
+
+  const dispatch = useAppDispatch();
+  const skillsData = useAppSelector((state) => state.skills);
 
   const toggleSection = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const addSkill = (category = activeCategory) => {
+  const handleAddSkill = (category = activeCategory) => {
     if (newSkill.trim() && !skillsData[category].includes(newSkill.trim())) {
-      setSkillsData(prev => ({
-        ...prev,
-        [category]: [...prev[category], newSkill.trim()]
-      }));
+      dispatch(addSkill({ category, skill: newSkill.trim() }));
       setNewSkill('');
     }
   };
 
   // Remove skill from specific category
-  const removeSkill = (category, skillToRemove) => {
-    setSkillsData(prev => ({
-      ...prev,
-      [category]: prev[category].filter(skill => skill !== skillToRemove)
-    }));
+  const handleRemoveSkill = (category, skillToRemove) => {
+    dispatch(removeSkill({ category, skill: skillToRemove }));
   };
 
   // Handle bulk skills input (comma-separated)
@@ -44,10 +35,7 @@ const Skills = ({ onDataChange, initialData = {} }) => {
         .filter(skill => skill && !skillsData[category].includes(skill));
       
       if (skills.length > 0) {
-        setSkillsData(prev => ({
-          ...prev,
-          [category]: [...prev[category], ...skills]
-        }));
+        dispatch(addBulkSkills({ category, skills }));
       }
     }
   };
@@ -56,16 +44,9 @@ const Skills = ({ onDataChange, initialData = {} }) => {
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      addSkill();
+      handleAddSkill();
     }
   };
-
-  // Notify parent component of data changes
-  useEffect(() => {
-    if (onDataChange) {
-      onDataChange(skillsData);
-    }
-  }, [skillsData, onDataChange]);
 
   // Skill categories configuration
   const skillCategories = [
@@ -177,7 +158,7 @@ const Skills = ({ onDataChange, initialData = {} }) => {
               className='flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]'
             />
             <button
-              onClick={() => addSkill()}
+              onClick={() => handleAddSkill()}
               disabled={!newSkill.trim()}
               className='px-4 py-2 bg-[#0ea5e9] text-white rounded-md hover:bg-[#0284c7] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'
             >
@@ -216,7 +197,7 @@ const Skills = ({ onDataChange, initialData = {} }) => {
               >
                 {skill}
                 <button
-                  onClick={() => removeSkill(activeCategory, skill)}
+                  onClick={() => handleRemoveSkill(activeCategory, skill)}
                   className='ml-1 text-current hover:bg-black hover:bg-opacity-10 rounded-full p-0.5'
                   title='Remove skill'
                 >
