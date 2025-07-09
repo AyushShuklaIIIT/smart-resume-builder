@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { updatePersonalInfo, updateField } from '../../store/slices/personalInfoSlice';
 
-const PersonalInfo = ({ onDataChange, initialData = {} }) => {
+const PersonalInfo = () => {
   // State management
-  const [isExpanded, setIsExpanded] = useState(true); // Personal info starts expanded
-  const [personalInfo, setPersonalInfo] = useState({
-    fullName: '',
-    jobTitle: '',
-    email: '',
-    phone: '',
-    location: '',
-    summary: '',
-    linkedIn: '',
-    github: '',
-    website: '',
-    ...initialData // Merge with initial data if provided
-  });
+  const [isExpanded, setIsExpanded] = useState(true);
+  const dispatch = useAppDispatch();
+  const personalInfo = useAppSelector((state) => state.personalInfo);
 
   // Toggle section visibility
   const toggleSection = () => {
@@ -23,18 +15,8 @@ const PersonalInfo = ({ onDataChange, initialData = {} }) => {
 
   // Handle input changes
   const handleInputChange = (field, value) => {
-    setPersonalInfo(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    dispatch(updateField({ field, value }));
   };
-
-  // Notify parent component of data changes
-  useEffect(() => {
-    if (onDataChange) {
-      onDataChange(personalInfo);
-    }
-  }, [personalInfo, onDataChange]);
 
   // Form validation
   const validatePersonalInfo = () => {
