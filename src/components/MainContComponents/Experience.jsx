@@ -1,69 +1,31 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { addExperience, removeExperience, updateExperience, updateCurrentStatus } from '../../store/slices/experienceSlice';
 
-const Experience = ({ onDataChange, initialData = [] }) => {
+const Experience = () => {
+  const dispatch = useAppDispatch();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [experiences, setExperiences] = useState(
-    initialData.length > 0 ? initialData : [
-      {
-        id: Date.now(),
-        company: '',
-        position: '',
-        startDate: '',
-        endDate: '',
-        current: false,
-        responsibilities: ''
-      }
-    ]
-  );
+  const { experiences } = useAppSelector((state) => state.experience); 
 
   const toggleSection = () => {
     setIsExpanded(!isExpanded);
   };
 
   const handleInputChange = (experienceId, field, value) => {
-    setExperiences(prevExperiences => 
-      prevExperiences.map(exp => 
-        exp.id === experienceId 
-          ? { ...exp, [field]: value }
-          : exp
-      )
-    );
+    dispatch(updateExperience({ experienceId, field, value }));
   };
 
   const handleCurrentChange = (experienceId, isCurrentJob) => {
-    setExperiences(prevExperiences => 
-      prevExperiences.map(exp => 
-        exp.id === experienceId 
-          ? { ...exp, current: isCurrentJob, endDate: isCurrentJob ? '' : exp.endDate }
-          : exp
-      )
-    );
+    dispatch(updateCurrentStatus({ experienceId, isCurrentJob }));
   };
 
-  const addExperience = () => {
-    const newExperience = {
-      id: Date.now(),
-      company: '',
-      position: '',
-      startDate: '',
-      endDate: '',
-      current: false,
-      responsibilities: ''
-    };
-    setExperiences([...experiences, newExperience]);
-  };
+  const handleAddExperience = () => {
+    dispatch(addExperience());
+  }
 
-  const removeExperience = (experienceId) => {
-    if (experiences.length > 1) {
-      setExperiences(experiences.filter(exp => exp.id !== experienceId));
-    }
+  const handleRemoveExperience = (experienceId) => {
+      dispatch(removeExperience(experienceId));
   };
-
-  useEffect(() => {
-    if (onDataChange) {
-      onDataChange(experiences);
-    }
-  }, [experiences, onDataChange]);
 
   const validateExperience = (experience) => {
     const errors = {};
@@ -131,7 +93,7 @@ const Experience = ({ onDataChange, initialData = [] }) => {
                   {experiences.length > 1 && (
                     <button
                       type="button"
-                      onClick={() => removeExperience(experience.id)}
+                      onClick={() => handleRemoveExperience(experience.id)}
                       className='text-red-500 hover:text-red-700 text-sm flex items-center'
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -221,7 +183,7 @@ const Experience = ({ onDataChange, initialData = [] }) => {
         </div>
         <button 
           type="button" 
-          onClick={addExperience}
+          onClick={handleAddExperience}
           className='flex items-center text-sm text-[#0284c7] hover:text-[#075985] mt-2 transition-colors duration-200'
         >
           <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 mr-1' viewBox='0 0 20 20' fill='currentColor'>
