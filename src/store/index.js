@@ -8,7 +8,7 @@ import achievementsSlice from './slices/achievementsSlice';
 
 export const store = configureStore({
     reducer: {
-        peronalInfo: personalInfoSlice,
+        personalInfo: personalInfoSlice,
         skills: skillsSlice,
         experience: experienceSlice,
         education: educationSlice,
