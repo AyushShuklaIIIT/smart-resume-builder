@@ -51,7 +51,7 @@ const PersonalInfo = ({ onDataChange, initialData = {} }) => {
     }
     
     // Phone format validation (basic)
-    const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
+    const phoneRegex = /^[\d\s\-+()]{10,}$/;
     if (personalInfo.phone && !phoneRegex.test(personalInfo.phone)) {
       errors.phone = 'Please enter a valid phone number';
     }
@@ -93,7 +93,6 @@ const PersonalInfo = ({ onDataChange, initialData = {} }) => {
     },
   ];
 
-  // Additional fields that span full width
   const additionalFields = [
     {
       id: "location",

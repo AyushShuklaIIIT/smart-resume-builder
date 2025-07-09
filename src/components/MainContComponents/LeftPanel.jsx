@@ -2,6 +2,7 @@ import React from 'react'
 import PersonalInfo from './PersonalInfo'
 import Education from './Education'
 import Experience from './Experience'
+import Skills from './Skills'
 
 const LeftPanel = () => {
   return (
@@ -11,6 +12,7 @@ const LeftPanel = () => {
         <PersonalInfo></PersonalInfo>
         <Education></Education>
         <Experience></Experience>
+        <Skills></Skills>
       </div>
     </div>
   )
