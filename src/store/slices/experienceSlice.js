@@ -60,9 +60,14 @@ export const experienceSlice = createSlice({
           state.experiences[experienceIndex].endDate = '';
         }
       } 
-    }
+    },
+    setExperiences: (state, action) => {
+      state.experiences = action.payload && action.payload.length > 0 ? action.payload : initialState.experiences;
+    },
+    
+    resetExperiences: () => initialState,
   }
 });
 
-export const { addExperience, removeExperience, updateExperience, updateCurrentStatus } = experienceSlice.actions;
+export const { addExperience, removeExperience, updateExperience, updateCurrentStatus, setExperiences, resetExperiences } = experienceSlice.actions;
 export default experienceSlice.reducer;

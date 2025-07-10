@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
 const Header = () => {
     return (
@@ -11,15 +12,24 @@ const Header = () => {
                     <h1 className='text-xl font-bold text-gray-800'>Smart Resume Builder</h1>
                 </div>
                 <nav>
-                    <ul className='flex space-x-6'>
+                    <ul className='flex space-x-6 items-center'>
                         <li><a href="#" className='text-[#0284c7] font-medium'>Home</a></li>
-                        <li><a href="#" className='text-gray-600 hover:text-[#0284c7] transition'>My Resumes</a></li>
-                        <li><a href="#" className='text-gray-600 hover:text-[#0284c7] transition'>About</a></li>
+                        <SignedOut>
+                            <li>
+                                <div className="px-3 py-2 text-sm font-medium text-white bg-[#0284c7] rounded-md hover:bg-[#0369a1]">
+                                    <SignInButton />
+                                </div>
+                            </li>
+                        </SignedOut>
+                        <SignedIn>
+                            <li><a href="#" className='text-gray-600 hover:text-[#0284c7] transition'>My Resumes</a></li>
+                            <li><UserButton afterSignOutRedirect='/' /></li>
+                        </SignedIn>
                     </ul>
                 </nav>
             </div>
         </header>
-    )
+    );
 }
 
-export default Header
+export default Header;

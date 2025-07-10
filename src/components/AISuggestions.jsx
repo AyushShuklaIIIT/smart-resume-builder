@@ -13,7 +13,7 @@ const AISuggestions = () => {
             </h3>
             <button id='close-modal' className='text-gray-500 hover:text-gray-700'>
                 <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5' viewBox='0 0 20 20' fill='currentColor'>
-                    <path fillRule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z' clipRule='evenodd' />
+                    <path fillRule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z' clipRule='evenodd' />
                 </svg>
             </button>
         </div>
@@ -22,25 +22,17 @@ const AISuggestions = () => {
                 <div className='suggestion-item p-4 bg-[#f0f9ff] rounded-md'>
                     <div className='flex justify-between'>
                         <h4 className='font-medium text-gray-800'>Enhance Your Professional Summary</h4>
-                        <div className='flex space-x-2'>
-                            <button className='text-[#0284c7] hover:text-[#075985] text-sm font-medium accept-suggestion'>Accept</button>
-                            <button className='text-gray-500 hover:text-gray-700 text-sm font-medium'>Ignore</button>
-                        </div>
                     </div>
                     <p className='text-gray-600 mt-1 text-sm'>Your current summary is good, but could be more impactful with specific achievements.</p>
                     <div className='mt-2 p-3 bg-white rounded border border-gray-200 text-sm'>
-                        <p><span className='line-through text-gray-400'>Dedicated software engineer with 5+ years of experience in full-stack development. Passionate about creating efficient, scalable solutions and mentoring junior developers.</span></p>
-                        <p className='text-[#0369a1] mt-2'>Results-driven software engineer with 5+ years of experience in full-stack development.Proven track record of delivering high-performance applications that improved system efficiency by 40%. Passionate about creating scalable solutions and mentoring junior developers to foster team growth.</p>
+                        <p><span className='line-through text-gray-400'>Dedicated software engineer with 5+ years of experience in full-stack development. Passionate about creating efficient, scalable applications.</span></p>
+                        <p className='text-[#0369a1] mt-2'>Results-driven software engineer with 5+ years of experience in full-stack development. Proven track record of delivering high-performance applications.</p>
                     </div>
                 </div>
 
                 <div className='suggestion-item p-4 bg-[#f0f9ff] rounded-md'>
                     <div className='flex justify-between'>
                         <h4 className='font-medium text-gray-800'>Quantify Your Experience</h4>
-                        <div className='flex space-x-2'>
-                            <button className='text-[#0284c7] hover:text-[#075985] text-sm font-medium accept-suggestion'>Accept</button>
-                            <button className='text-gray-500 hover:text-gray-700 text-sm font-medium'>Ignore</button>
-                        </div>
                     </div>
                     <p className='text-gray-600 mt-1 text-sm'>Add metrics to your first job experience to demonstrate impact.</p>
                     <div className='mt-2 p-3 bg-white rounded border border-gray-200 text-sm'>
@@ -52,10 +44,6 @@ const AISuggestions = () => {
                 <div className='suggestion-item p-4 bg-[#f0f9ff] rounded-md'>
                     <div className='flex justify-between'>
                         <h4 className='font-medium text-gray-800'>Highlight Your Technical Skills</h4>
-                        <div className='flex space-x-2'>
-                            <button className='text-[#0284c7] hover:text-[#075985] text-sm font-medium accept-suggestion'>Accept</button>
-                            <button className='text-gray-500 hover:text-gray-700 text-sm font-medium'>Ignore</button>
-                        </div>
                     </div>
                     <p className='text-gray-600 mt-1 text-sm'>Incorporate more technical skills into your summary to attract attention.</p>
                     <div className='mt-2 p-3 bg-white rounded border border-gray-200 text-sm'>

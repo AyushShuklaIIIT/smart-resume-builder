@@ -33,7 +33,7 @@ const Skills = () => {
         .split(',')
         .map(skill => skill.trim())
         .filter(skill => skill && !skillsData[category].includes(skill));
-      
+
       if (skills.length > 0) {
         dispatch(addBulkSkills({ category, skills }));
       }
@@ -102,16 +102,16 @@ const Skills = () => {
   return (
     <div className='mb-6 border border-gray-200 rounded-md'>
       {/* Header with toggle button */}
-      <button 
+      <button
         className='flex justify-between items-center w-full px-4 py-3 text-left font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-t-md focus:outline-none'
         onClick={toggleSection}
         type="button"
       >
         <span>Skills ({getTotalSkills()})</span>
-        <svg 
-          xmlns='http://www.w3.org/2000/svg' 
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
           className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-          fill='currentColor' 
+          fill='currentColor'
           viewBox='0 0 20 20'
         >
           <path fillRule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clipRule="evenodd" />
@@ -127,11 +127,10 @@ const Skills = () => {
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeCategory === category.id
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeCategory === category.id
                     ? 'bg-[#0ea5e9] text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 {category.label} ({skillsData[category.id].length})
               </button>

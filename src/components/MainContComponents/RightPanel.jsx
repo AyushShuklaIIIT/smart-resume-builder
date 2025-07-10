@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { useAppSelector } from '../../store/hooks';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { useAuth } from '@clerk/clerk-react';
+import { exportPdfAPI } from '../../services/api';
 
 const RightPanel = () => {
-  const resumeRef = useRef();
+  const resumeRef = useRef(null);
+  const { getToken } = useAuth();
 
   const personalInfo = useAppSelector((state) => state.personalInfo);
   const { experiences } = useAppSelector((state) => state.experience);
@@ -38,33 +39,33 @@ const RightPanel = () => {
 
   // Handle PDF export
   const handleExportPDF = async () => {
-    const element = resumeRef.current;
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true
-    });
-
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgWidth = 210;
-    const pageHeight = 295;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    let heightLeft = imgHeight;
-
-    let position = 0;
-
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-
-    while (heightLeft >= 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+    if(!resumeRef.current) {
+      console.error('Resume preview element is not available.');
+      alert('Could not export PDF. Please try again in a moment.');
+      return;
     }
 
-    pdf.save(`${personalInfo.fullName || 'Resume'}_Resume.pdf`);
+    const htmlContent = resumeRef.current.innerHTML;
+
+    if(!htmlContent.trim()) {
+      alert("There is no content to export.");
+      return;
+    }
+
+    try {
+      const blob = await exportPdfAPI(getToken, htmlContent);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${personalInfo.fullName || 'Resume'}_Resume.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to export PDF:', error);
+      alert('There was an error exporting your resume. Please try again.')
+    }
   };
 
   // Combine all skills from different categories

@@ -25,9 +25,12 @@ export const personalInfoSlice = createSlice({
     updatePersonalInfo: (state, action) => {
       return { ...state, ...action.payload };
     },
+    setPersonalInfo: (state, action) => {
+      return { ...initialState, ...action.payload };
+    },
     resetPersonalInfo: () => initialState,
   },
 });
 
-export const { updateField, updatePersonalInfo, resetPersonalInfo } = personalInfoSlice.actions;
+export const { updateField, updatePersonalInfo, resetPersonalInfo, setPersonalInfo } = personalInfoSlice.actions;
 export default personalInfoSlice.reducer;
