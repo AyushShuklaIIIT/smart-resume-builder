@@ -1,18 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
 import personalInfoSlice from './slices/personalInfoSlice';
-import skillsSlice from './slices/skillsSlice';
 import experienceSlice from './slices/experienceSlice';
 import educationSlice from './slices/educationSlice';
+import skillsSlice from './slices/skillsSlice';
 import projectsSlice from './slices/projectsSlice';
 import achievementsSlice from './slices/achievementsSlice';
 
 export const store = configureStore({
-    reducer: {
-        peronalInfo: personalInfoSlice,
-        skills: skillsSlice,
-        experience: experienceSlice,
-        education: educationSlice,
-        projects: projectsSlice,
-        achievements: achievementsSlice
-    },
+  reducer: {
+    personalInfo: personalInfoSlice,
+    experience: experienceSlice,
+    education: educationSlice,
+    skills: skillsSlice,
+    projects: projectsSlice,
+    achievements: achievementsSlice,
+  },
 });

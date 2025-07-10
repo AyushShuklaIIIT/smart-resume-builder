@@ -13,7 +13,7 @@ function App() {
         <MainContent></MainContent>
       </div>
     </Provider>
-  )
+  );
 }
 
-export default App
+export default App;

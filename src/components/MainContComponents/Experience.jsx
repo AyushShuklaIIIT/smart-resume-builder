@@ -1,38 +1,45 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { addExperience, removeExperience, updateExperience, updateCurrentStatus } from '../../store/slices/experienceSlice';
 
 const Experience = () => {
   const dispatch = useAppDispatch();
   const [isExpanded, setIsExpanded] = useState(false);
-  const { experiences } = useAppSelector((state) => state.experience); 
+  
+  const experienceState = useAppSelector((state) => {
+    return state.experience || { experiences: [] };
+  });
+  
+  const { experiences } = experienceState;
 
   const toggleSection = () => {
     setIsExpanded(!isExpanded);
   };
 
   const handleInputChange = (experienceId, field, value) => {
-    dispatch(updateExperience({ experienceId, field, value }));
+    const payload = { id: experienceId, field, value };
+    dispatch(updateExperience(payload));
   };
 
   const handleCurrentChange = (experienceId, isCurrentJob) => {
-    dispatch(updateCurrentStatus({ experienceId, isCurrentJob }));
+    const payload = { id: experienceId, current: isCurrentJob };
+    dispatch(updateCurrentStatus(payload));
   };
 
   const handleAddExperience = () => {
     dispatch(addExperience());
-  }
+  };
 
   const handleRemoveExperience = (experienceId) => {
-      dispatch(removeExperience(experienceId));
+    dispatch(removeExperience(experienceId));
   };
 
   const validateExperience = (experience) => {
     const errors = {};
-    if (!experience.company.trim()) errors.company = 'Company is required';
-    if (!experience.position.trim()) errors.position = 'Position is required';
-    if (!experience.startDate) errors.startDate = 'Start date is required';
-    if (!experience.current && !experience.endDate) errors.endDate = 'End date is required';
+    if (!experience?.company?.trim()) errors.company = 'Company is required';
+    if (!experience?.position?.trim()) errors.position = 'Position is required';
+    if (!experience?.startDate) errors.startDate = 'Start date is required';
+    if (!experience?.current && !experience?.endDate) errors.endDate = 'End date is required';
     return errors;
   };
 
@@ -60,6 +67,16 @@ const Experience = () => {
     },
   ];
 
+  if (!experiences || !Array.isArray(experiences)) {
+    return (
+      <div className='mb-6 border border-gray-200 rounded-md'>
+        <div className='p-4 text-center text-gray-500'>
+          Loading experience data...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='mb-6 border border-gray-200 rounded-md'>
       <button 
@@ -67,7 +84,7 @@ const Experience = () => {
         onClick={toggleSection}
         type="button"
       >
-        <span>Experience</span>
+        <span>Experience ({experiences.length})</span>
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
           className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
@@ -87,7 +104,7 @@ const Experience = () => {
               <div key={experience.id} className='experience-item mb-4 pb-4 border-b border-gray-200 last:border-b-0'>
                 <div className='flex justify-between items-center mb-4'>
                   <h4 className='font-semibold text-gray-800'>
-                    Experience {index + 1}
+                    Experience {index + 1} (ID: {experience.id})
                     {experience.company && ` - ${experience.company}`}
                   </h4>
                   {experiences.length > 1 && (
@@ -116,7 +133,9 @@ const Experience = () => {
                         id={`${item.id}-${experience.id}`}
                         placeholder={item.placeholder}
                         value={experience[item.id] || ''}
-                        onChange={(e) => handleInputChange(experience.id, item.id, e.target.value)}
+                        onChange={(e) => {
+                          handleInputChange(experience.id, item.id, e.target.value);
+                        }}
                         className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] ${
                           errors[item.id] ? 'border-red-500' : 'border-gray-300'
                         }`}
@@ -150,7 +169,7 @@ const Experience = () => {
                         <input 
                           type="checkbox" 
                           id={`current-job-${experience.id}`}
-                          checked={experience.current}
+                          checked={experience.current || false}
                           onChange={(e) => handleCurrentChange(experience.id, e.target.checked)}
                           className='h-4 w-4 text-[#0284c7] focus:ring-[#0ea5e9] border-gray-300 rounded' 
                         />
@@ -163,6 +182,7 @@ const Experience = () => {
                       <p className='text-red-500 text-xs mt-1'>{errors.endDate}</p>
                     )}
                   </div>
+                  
                   <div className='md:col-span-2'>
                     <label htmlFor={`responsibilities-${experience.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Responsibilities & Achievements
@@ -181,6 +201,7 @@ const Experience = () => {
             );
           })}
         </div>
+        
         <button 
           type="button" 
           onClick={handleAddExperience}
@@ -191,6 +212,7 @@ const Experience = () => {
           </svg>
           Add Experience
         </button>
+        
         <div className='mt-4 p-3 bg-blue-50 rounded-md'>
           <p className='text-sm text-blue-700'>
             <strong>{experiences.length}</strong> experience{experiences.length !== 1 ? 's' : ''} added

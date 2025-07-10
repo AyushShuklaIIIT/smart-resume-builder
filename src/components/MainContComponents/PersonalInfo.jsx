@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { updateField } from '../../store/slices/personalInfoSlice';
 
@@ -6,7 +6,11 @@ const PersonalInfo = () => {
   // State management
   const [isExpanded, setIsExpanded] = useState(true);
   const dispatch = useAppDispatch();
-  const personalInfo = useAppSelector((state) => state.personalInfo);
+  const personalInfo = useAppSelector((state) => {
+    console.log('Full Redux State:', state);
+    console.log('PersonalInfo State: ', state.personalInfo);
+    return state.personalInfo || {};
+  });
 
   // Toggle section visibility
   const toggleSection = () => {
@@ -15,44 +19,32 @@ const PersonalInfo = () => {
 
   // Handle input changes
   const handleInputChange = (field, value) => {
+    console.log('Dispatching updateField: ', {field, value})
     dispatch(updateField({ field, value }));
+    console.log('Dispatch completeed');
   };
 
-  const isValidURL = (string) => {
-    try {
-      new URL(string);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  // Form validation
+  // Form validation with null checks
   const validatePersonalInfo = () => {
     const errors = {};
-    if (!personalInfo.fullName.trim()) errors.fullName = 'Full name is required';
-    if (!personalInfo.jobTitle.trim()) errors.jobTitle = 'Job title is required';
-    if (!personalInfo.email.trim()) errors.email = 'Email is required';
-    if (!personalInfo.phone.trim()) errors.phone = 'Phone number is required';
+    
+    // Add null checks for personalInfo
+    if (!personalInfo?.fullName?.trim()) errors.fullName = 'Full name is required';
+    if (!personalInfo?.jobTitle?.trim()) errors.jobTitle = 'Job title is required';
+    if (!personalInfo?.email?.trim()) errors.email = 'Email is required';
+    if (!personalInfo?.phone?.trim()) errors.phone = 'Phone number is required';
     
     // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (personalInfo.email && !emailRegex.test(personalInfo.email)) {
+    if (personalInfo?.email && !emailRegex.test(personalInfo.email)) {
       errors.email = 'Please enter a valid email address';
     }
     
     // Phone format validation (basic)
     const phoneRegex = /^[\d\s\-+()]{10,}$/;
-    if (personalInfo.phone && !phoneRegex.test(personalInfo.phone)) {
+    if (personalInfo?.phone && !phoneRegex.test(personalInfo.phone)) {
       errors.phone = 'Please enter a valid phone number';
     }
-
-    const urlFields = ['linkedIn', 'github', 'website'];
-    urlFields.forEach(field => {
-      if(personalInfo[field] && !isValidURL(personalInfo[field])) {
-        errors[field] = 'Please enter a valid URL';
-      }
-    });
     
     return errors;
   };
@@ -122,6 +114,24 @@ const PersonalInfo = () => {
     }
   ];
 
+  // Helper function to calculate completion percentage
+  function getCompletionPercentage() {
+    if (!personalInfo) return 0; // Add null check
+    
+    const requiredFields = ['fullName', 'jobTitle', 'email', 'phone'];
+    const filledRequired = requiredFields.filter(field => personalInfo[field]?.trim()).length;
+    const optionalFields = ['location', 'summary', 'linkedIn', 'github', 'website'];
+    const filledOptional = optionalFields.filter(field => personalInfo[field]?.trim()).length;
+    
+    const requiredWeight = 60; // 60% weight for required fields
+    const optionalWeight = 40; // 40% weight for optional fields
+    
+    const requiredScore = (filledRequired / requiredFields.length) * requiredWeight;
+    const optionalScore = (filledOptional / optionalFields.length) * optionalWeight;
+    
+    return Math.min(100, requiredScore + optionalScore);
+  }
+
   return (
     <div className='mb-6 border border-gray-200 rounded-md'>
       {/* Header with toggle button */}
@@ -154,7 +164,7 @@ const PersonalInfo = () => {
               <input 
                 type={info.type} 
                 id={info.id}
-                value={personalInfo[info.id] || ''}
+                value={personalInfo?.[info.id] || ''} // Add null check
                 onChange={(e) => handleInputChange(info.id, e.target.value)}
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] ${
                   errors[info.id] ? 'border-red-500' : 'border-gray-300'
@@ -178,7 +188,7 @@ const PersonalInfo = () => {
               <input 
                 type={field.type} 
                 id={field.id}
-                value={personalInfo[field.id] || ''}
+                value={personalInfo?.[field.id] || ''} // Add null check
                 onChange={(e) => handleInputChange(field.id, e.target.value)}
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] ${
                   errors[field.id] ? 'border-red-500' : 'border-gray-300'
@@ -200,13 +210,13 @@ const PersonalInfo = () => {
             <textarea 
               id="summary"
               rows={4}
-              value={personalInfo.summary || ''}
+              value={personalInfo?.summary || ''} // Add null check
               onChange={(e) => handleInputChange('summary', e.target.value)}
               className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]' 
               placeholder='Brief professional summary highlighting your key skills, experience, and career objectives...'
             />
             <p className='text-xs text-gray-500 mt-1'>
-              {personalInfo.summary ? personalInfo.summary.length : 0}/500 characters
+              {personalInfo?.summary ? personalInfo.summary.length : 0}/500 characters
             </p>
           </div>
         </div>
@@ -237,22 +247,6 @@ const PersonalInfo = () => {
       </div>
     </div>
   );
-
-  // Helper function to calculate completion percentage
-  function getCompletionPercentage() {
-    const requiredFields = ['fullName', 'jobTitle', 'email', 'phone'];
-    const filledRequired = requiredFields.filter(field => personalInfo[field]?.trim()).length;
-    const optionalFields = ['location', 'summary', 'linkedIn', 'github', 'website'];
-    const filledOptional = optionalFields.filter(field => personalInfo[field]?.trim()).length;
-    
-    const requiredWeight = 60; // 60% weight for required fields
-    const optionalWeight = 40; // 40% weight for optional fields
-    
-    const requiredScore = (filledRequired / requiredFields.length) * requiredWeight;
-    const optionalScore = (filledOptional / optionalFields.length) * optionalWeight;
-    
-    return Math.min(100, requiredScore + optionalScore);
-  }
 };
 
 export default PersonalInfo;

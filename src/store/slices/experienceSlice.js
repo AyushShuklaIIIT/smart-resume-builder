@@ -1,70 +1,68 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    experiences: [
-        {
-            id: Date.now(),
-            company: '',
-            position: '',
-            startDate: '',
-            endDate: '',
-            current: false,
-            responsibilities: ''
-        }
-    ]
+  experiences: [
+    {
+      id: Date.now(),
+      company: '',
+      position: '',
+      startDate: '',
+      endDate: '',
+      current: false,
+      responsibilities: ''
+    }
+  ]
 };
 
 export const experienceSlice = createSlice({
-    name: 'experience',
-    initialState,
-    reducers: {
-        addExperience: (state) => {
-            state.experiences.push({
-                id: Date.now(),
-                company: '',
-                position: '',
-                startDate: '',
-                endDate: '',
-                current: false,
-                responsibilities: ''
-            });
-        },
-        removeExperience: (state, action) => {
-            if(state.experiences.length > 1) {
-                state.experiences = state.experiences.filter(exp => exp.id !== action.payload);
-            }
-        },
-        updateExperience: (state, action) => {
-            const { id, field, value } = action.payload;
-            const experience = state.experiences.find(exp => exp.id === id);
-            if (experience) {
-                experience[field] = value;
-            }
-        },
-        updateCurrentStatus: (state, action) => {
-            const {id, current} = action.payload;
-            const experience = state.experiences.find(exp => exp.id === id);
-            if (experience) {
-                experience.current = current;
-                if(current) {
-                    experience.endDate = '';
-                }
-            }
-        },
-        setExperiences: (state, action) => {
-            state.experiences = action.payload;
-        },
-        resetExperiences: () => initialState
+  name: 'experience',
+  initialState,
+  reducers: {
+    addExperience: (state) => {
+      const newExperience = {
+        id: Date.now(),
+        company: '',
+        position: '',
+        startDate: '',
+        endDate: '',
+        current: false,
+        responsibilities: ''
+      };
+      state.experiences.push(newExperience);
     },
+    
+    removeExperience: (state, action) => {
+      const experienceId = action.payload;
+      state.experiences = state.experiences.filter(exp => exp.id !== experienceId);
+    },
+    
+    updateExperience: (state, action) => {
+      const { id, field, value } = action.payload;
+      const experienceIndex = state.experiences.findIndex(exp => exp.id === id);
+      if (experienceIndex !== -1) {
+        state.experiences[experienceIndex][field] = value;
+      }
+    },
+    
+    updateCurrentStatus: (state, action) => {
+      const { id, current } = action.payload;
+      
+      const experienceIndex = state.experiences.findIndex(exp => exp.id === id);
+      if (experienceIndex !== -1) {
+        state.experiences[experienceIndex].current = current;
+        if (current) {
+          state.experiences[experienceIndex].endDate = '';
+        }
+      }
+      if (experienceIndex !== -1) {
+        state.experiences[experienceIndex].current = current;
+        if (current) {
+          state.experiences[experienceIndex].endDate = '';
+        }
+      } 
+    }
+  }
 });
 
-export const {
-    addExperience,
-    removeExperience,
-    updateExperience,
-    updateCurrentStatus,
-    setExperiences,
-    resetExperiences
-} = experienceSlice.actions;
-
+export const { addExperience, removeExperience, updateExperience, updateCurrentStatus } = experienceSlice.actions;
 export default experienceSlice.reducer;
