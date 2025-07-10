@@ -13,7 +13,7 @@ const RightPanel = () => {
   const { educationEntries } = useAppSelector((state) => state.education);
   const skillsData = useAppSelector((state) => state.skills);
   const { projects } = useAppSelector((state) => state.projects);
-  const { achievements } = useAppSelector((state) => state.achievements); 
+  const { achievements } = useAppSelector((state) => state.achievements);
 
   // Data aliases for rendering
   const experienceData = experiences || [];
@@ -25,35 +25,43 @@ const RightPanel = () => {
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
     documentTitle: `${personalInfo.fullName || 'Resume'}_Resume`,
-    pageStyle: `
-      @page {
-        size: A4;
-        margin: 0.5in;
-      }
-      @media print {
-        body { font-size: 12px; }
-        .no-print { display: none !important; }
-      }
-    `
   });
 
   // Handle PDF export
   const handleExportPDF = async () => {
-    if(!resumeRef.current) {
+    if (!resumeRef.current) {
       console.error('Resume preview element is not available.');
       alert('Could not export PDF. Please try again in a moment.');
       return;
     }
 
-    const htmlContent = resumeRef.current.innerHTML;
+    const stylesheets = Array.from(document.styleSheets).map(sheet => sheet.href ? `<link rel="stylesheet" href="${sheet.href}">` : '').join('');
 
-    if(!htmlContent.trim()) {
-      alert("There is no content to export.");
-      return;
-    }
+    const resumeHtml = resumeRef.current.innerHTML;
+
+    const fullHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Resume</title>
+        ${stylesheets}
+        <style>
+          body {
+            -webkit-print-color-adjust: exact;
+            font-family: sans-serif;
+          }
+        </style>
+      </head>
+      <body>
+        ${resumeHtml}
+      </body>
+      </html>
+    `;
 
     try {
-      const blob = await exportPdfAPI(getToken, htmlContent);
+      const blob = await exportPdfAPI(getToken, fullHtml);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -62,9 +70,9 @@ const RightPanel = () => {
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Failed to export PDF:', error);
-      alert('There was an error exporting your resume. Please try again.')
+    } catch(error) {
+      console.error("Failed to export PDF:", error);
+      alert('There was an error exporting your resume. Please check the console for details.');
     }
   };
 
@@ -83,9 +91,9 @@ const RightPanel = () => {
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString + '-01');
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short'
     });
   };
 
@@ -102,7 +110,7 @@ const RightPanel = () => {
         <div className='flex justify-between items-center mb-4'>
           <h2 className='text-xl font-semibold text-gray-800'>Resume Preview</h2>
           <div className='flex space-x-2 no-print'>
-            <button 
+            <button
               onClick={handleExportPDF}
               className='flex items-center px-3 py-1.5 bg-[#0284c7] text-white text-sm font-medium rounded-md hover:bg-[#0369a1] focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] transition-colors'
             >
@@ -111,7 +119,7 @@ const RightPanel = () => {
               </svg>
               Export as PDF
             </button>
-            <button 
+            <button
               onClick={handlePrint}
               className='flex items-center px-3 py-1.5 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors'
             >
@@ -122,7 +130,7 @@ const RightPanel = () => {
             </button>
           </div>
         </div>
-        
+
         <div className='border border-gray-200 rounded-md p-6 bg-white resume-preview' ref={resumeRef}>
           {/* Personal Information */}
           <div className='mb-6'>
@@ -262,7 +270,7 @@ const RightPanel = () => {
               </h2>
               <div className='skills-list flex flex-wrap gap-2'>
                 {getAllSkills().map((skill) => (
-                  <span 
+                  <span
                     key={skill}
                     className='bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full'
                   >
@@ -361,14 +369,14 @@ const RightPanel = () => {
           )}
 
           {/* Empty state */}
-          {!personalInfo.fullName && !experienceData.length && !educationData.length && 
-           getAllSkills().length === 0 && !projectsData.length && !achievementsData.length && (
-            <div className='text-center py-12'>
-              <div className='text-gray-400 text-6xl mb-4'>📄</div>
-              <h3 className='text-lg font-medium text-gray-900 mb-2'>Start Building Your Resume</h3>
-              <p className='text-gray-600'>Fill in your information in the form to see your resume preview here.</p>
-            </div>
-          )}
+          {!personalInfo.fullName && !experienceData.length && !educationData.length &&
+            getAllSkills().length === 0 && !projectsData.length && !achievementsData.length && (
+              <div className='text-center py-12'>
+                <div className='text-gray-400 text-6xl mb-4'>📄</div>
+                <h3 className='text-lg font-medium text-gray-900 mb-2'>Start Building Your Resume</h3>
+                <p className='text-gray-600'>Fill in your information in the form to see your resume preview here.</p>
+              </div>
+            )}
         </div>
       </div>
     </div>
