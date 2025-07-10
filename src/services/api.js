@@ -42,3 +42,22 @@ export const exportPdfAPI = async (getToken, htmlContent) => {
     }
     return response.blob();
 }
+
+export const getAiSuggestionsAPI = async (getToken, prompt) => {
+    const token = await getToken();
+    const response = await fetch(`${API_BASE_URL}/resume/suggestions`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ prompt }),
+    });
+
+    if(!response.ok) {
+        throw new Error('Failed to get AI suggestions');
+    }
+
+    const data = await response.json();
+    return data.suggestions;
+}

@@ -4,7 +4,8 @@ const initialState = {
     isSaving: false,
     isLoading: true,
     lastSaved: null,
-    error: null
+    error: null,
+    isAiModalOpen: false,
 };
 
 export const appSlice = createSlice({
@@ -23,8 +24,14 @@ export const appSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
+        openAiModal: (state) => {
+            state.isAiModalOpen = true;
+        },
+        closeAiModal: (state) => {
+            state.isAiModalOpen = false;
+        }
     },
 });
 
-export const { setLoading, setSaving, setError } = appSlice.actions;
+export const { setLoading, setSaving, setError, openAiModal, closeAiModal } = appSlice.actions;
 export default appSlice.reducer;
