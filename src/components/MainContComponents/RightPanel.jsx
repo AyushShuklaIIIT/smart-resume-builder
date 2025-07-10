@@ -35,7 +35,9 @@ const RightPanel = () => {
       return;
     }
 
-    const stylesheets = Array.from(document.styleSheets).map(sheet => sheet.href ? `<link rel="stylesheet" href="${sheet.href}">` : '').join('');
+    const linkedStyles = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(link => link.outerHTML).join('');
+
+    const inlineStyles = Array.from(document.querySelectorAll('style')).map(style => style.innerHTML).join('');
 
     const resumeHtml = resumeRef.current.innerHTML;
 
@@ -46,16 +48,18 @@ const RightPanel = () => {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Resume</title>
-        ${stylesheets}
+        ${linkedStyles}
         <style>
+        ${inlineStyles}
           body {
-            -webkit-print-color-adjust: exact;
-            font-family: sans-serif;
+            -webkit-print-color-adjust: exact !important;
           }
         </style>
       </head>
       <body>
+      <div class="p-6">
         ${resumeHtml}
+      </div>
       </body>
       </html>
     `;
