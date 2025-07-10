@@ -3,6 +3,8 @@ import Header from "./components/Header"
 import MainContent from "./components/MainContent"
 import { Provider } from "react-redux"
 import { store } from "./store";
+import AISuggestions from "./components/AISuggestions"
+import Footer from "./components/Footer"
 
 function App() {
 
@@ -11,6 +13,8 @@ function App() {
       <div className="bg-gray-50 min-h-screen">
         <Header></Header>
         <MainContent></MainContent>
+        <AISuggestions></AISuggestions>
+        <Footer></Footer>
       </div>
     </Provider>
   );
