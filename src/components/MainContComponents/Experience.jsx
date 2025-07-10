@@ -104,7 +104,7 @@ const Experience = () => {
               <div key={experience.id} className='experience-item mb-4 pb-4 border-b border-gray-200 last:border-b-0'>
                 <div className='flex justify-between items-center mb-4'>
                   <h4 className='font-semibold text-gray-800'>
-                    Experience {index + 1} (ID: {experience.id})
+                    Experience {index + 1}
                     {experience.company && ` - ${experience.company}`}
                   </h4>
                   {experiences.length > 1 && (
