@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { updateField } from '../../store/slices/personalInfoSlice';
+import { FaUser, FaCamera } from 'react-icons/fa';
 
 const PersonalInfo = () => {
   // State management
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
   const dispatch = useAppDispatch();
   const personalInfo = useAppSelector((state) => {
-    console.log('Full Redux State:', state);
-    console.log('PersonalInfo State: ', state.personalInfo);
     return state.personalInfo || {};
   });
 
@@ -19,9 +19,36 @@ const PersonalInfo = () => {
 
   // Handle input changes
   const handleInputChange = (field, value) => {
-    console.log('Dispatching updateField: ', {field, value})
     dispatch(updateField({ field, value }));
-    console.log('Dispatch completeed');
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      if(data.secure_url) {
+        dispatch(updateField({ field: 'photo', value: data.secure_url}));
+      }
+    } catch(error) {
+      console.error('Error uploading image: ', error);
+      alert("There was an error uploading your photo. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   // Form validation with null checks
@@ -155,6 +182,23 @@ const PersonalInfo = () => {
       <div className={`px-4 py-3 border-t border-gray-200 ${isExpanded ? 'block' : 'hidden'}`}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           {/* Main personal info fields */}
+          <div className='md:col-span-2 flex items-center gap-4 p-2 rounded-md'>
+            <div className='w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0'>
+              {personalInfo.photo ? (
+                <img src={personalInfo.photo} alt="Profile" className='w-full h-full object-cover' />
+              ): (
+                <FaUser className='text-gray-400 text-3xl' />
+              )}
+            </div>
+            <div>
+              <label htmlFor="photo-upload" className='cursor-pointer flex items-center px-4 py-2 bg-white text-gray-800 border border-gray-300 text-sm font-semibold rounded-md hover:bg-gray-100 shadow-sm'>
+                <FaCamera className="mr-2" />
+                {isUploading ? 'Uploading...' : 'Upload Photo'}
+              </label>
+              <input type="file" id='photo-upload' accept='image/png, image/jpeg' className='hidden' onChange={handlePhotoUpload} disabled={isUploading} />
+              <p className='text-xs text-gray-500 mt-2'>Recommended: Square image (e.g., 400x400px).</p>
+            </div>
+          </div>
           {personalInfoArr.map((info) => (
             <div key={info.id}>
               <label htmlFor={info.id} className='block text-sm font-medium text-gray-700 mb-1'>

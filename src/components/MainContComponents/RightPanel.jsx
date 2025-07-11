@@ -74,7 +74,7 @@ const RightPanel = () => {
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-    } catch(error) {
+    } catch (error) {
       console.error("Failed to export PDF:", error);
       alert('There was an error exporting your resume. Please check the console for details.');
     }
@@ -137,48 +137,55 @@ const RightPanel = () => {
 
         <div className='border border-gray-200 rounded-md p-6 bg-white resume-preview' ref={resumeRef}>
           {/* Personal Information */}
-          <div className='mb-6'>
-            <h1 className='text-2xl font-bold text-gray-900 mb-1'>
-              {personalInfo.fullName || 'Your Name'}
-            </h1>
-            <p className='text-gray-600 font-medium mb-3'>
-              {personalInfo.jobTitle || 'Your Job Title'}
-            </p>
-            <div className='contact-info text-sm text-gray-600 space-y-1'>
-              {personalInfo.email && (
-                <div className='flex items-center'>
-                  <span className='mr-2'>📧</span>
-                  <span>{personalInfo.email}</span>
-                </div>
-              )}
-              {personalInfo.phone && (
-                <div className='flex items-center'>
-                  <span className='mr-2'>📞</span>
-                  <span>{personalInfo.phone}</span>
-                </div>
-              )}
-              {personalInfo.location && (
-                <div className='flex items-center'>
-                  <span className='mr-2'>📍</span>
-                  <span>{personalInfo.location}</span>
-                </div>
-              )}
-              {personalInfo.linkedIn && (
-                <div className='flex items-center'>
-                  <span className='mr-2'>💼</span>
-                  <a href={personalInfo.linkedIn} target='_blank' rel='noopener noreferrer' className='text-[#0284c7] hover:underline'>
-                    LinkedIn
-                  </a>
-                </div>
-              )}
-              {personalInfo.github && (
-                <div className='flex items-center'>
-                  <span className='mr-2'>🔗</span>
-                  <a href={personalInfo.github} target='_blank' rel='noopener noreferrer' className='text-[#0284c7] hover:underline'>
-                    GitHub
-                  </a>
-                </div>
-              )}
+          <div className='flex items-center mb-6'>
+            {personalInfo.photo && (
+              <div className='w-24 h-24 rounded-full mr-6 overflow-hidden flex-shrink-0'>
+                <img src={personalInfo.photo} alt='Profile' className='w-full h-full object-cover' />
+              </div>
+            )}
+            <div className='flex-1'>
+              <h1 className='text-2xl font-bold text-gray-900 mb-1'>
+                {personalInfo.fullName || 'Your Name'}
+              </h1>
+              <p className='text-gray-600 font-medium mb-3'>
+                {personalInfo.jobTitle || 'Your Job Title'}
+              </p>
+              <div className='contact-info text-sm text-gray-600 space-y-1'>
+                {personalInfo.email && (
+                  <div className='flex items-center'>
+                    <span className='mr-2'>📧</span>
+                    <span>{personalInfo.email}</span>
+                  </div>
+                )}
+                {personalInfo.phone && (
+                  <div className='flex items-center'>
+                    <span className='mr-2'>📞</span>
+                    <span>{personalInfo.phone}</span>
+                  </div>
+                )}
+                {personalInfo.location && (
+                  <div className='flex items-center'>
+                    <span className='mr-2'>📍</span>
+                    <span>{personalInfo.location}</span>
+                  </div>
+                )}
+                {personalInfo.linkedIn && (
+                  <div className='flex items-center'>
+                    <span className='mr-2'>💼</span>
+                    <a href={personalInfo.linkedIn} target='_blank' rel='noopener noreferrer' className='text-[#0284c7] hover:underline'>
+                      LinkedIn
+                    </a>
+                  </div>
+                )}
+                {personalInfo.github && (
+                  <div className='flex items-center'>
+                    <span className='mr-2'>🔗</span>
+                    <a href={personalInfo.github} target='_blank' rel='noopener noreferrer' className='text-[#0284c7] hover:underline'>
+                      GitHub
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

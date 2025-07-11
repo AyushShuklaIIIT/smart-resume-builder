@@ -10,6 +10,7 @@ const initialState = {
   github: '',
   website: '',
   summary: '',
+  photo: '',
 };
 
 export const personalInfoSlice = createSlice({
