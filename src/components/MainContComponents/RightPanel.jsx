@@ -1,13 +1,10 @@
 import React, { useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
 import { useAppSelector } from '../../store/hooks';
-import { useAuth } from '@clerk/clerk-react';
 import { exportPdfAPI } from '../../services/api';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaDownload } from 'react-icons/fa';
 
 const RightPanel = () => {
   const resumeRef = useRef(null);
-  const { getToken } = useAuth();
 
   const personalInfo = useAppSelector((state) => state.personalInfo);
   const { experiences } = useAppSelector((state) => state.experience);
@@ -21,12 +18,6 @@ const RightPanel = () => {
   const educationData = educationEntries || [];
   const projectsData = projects || [];
   const achievementsData = achievements || [];
-
-  // Handle print functionality
-  const handlePrint = useReactToPrint({
-    content: () => resumeRef.current,
-    documentTitle: `${personalInfo.fullName || 'Resume'}_Resume`,
-  });
 
   // Handle PDF export
   const handleExportPDF = async () => {
@@ -66,7 +57,7 @@ const RightPanel = () => {
     `;
 
     try {
-      const blob = await exportPdfAPI(getToken, fullHtml);
+      const blob = await exportPdfAPI(fullHtml);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -119,19 +110,8 @@ const RightPanel = () => {
               onClick={handleExportPDF}
               className='flex items-center px-3 py-1.5 bg-[#0284c7] text-white text-sm font-medium rounded-md hover:bg-[#0369a1] focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] transition-colors'
             >
-              <svg xmlns='http://www.w3.org/2000/svg' className='w-4 h-4 mr-1' viewBox='0 0 20 20' fill='currentColor'>
-                <path fillRule='evenodd' d='M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 11.586V8z' clipRule='evenodd' />
-              </svg>
+              <FaDownload className='w-4 h-4 mr-1' />
               Export as PDF
-            </button>
-            <button
-              onClick={handlePrint}
-              className='flex items-center px-3 py-1.5 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors'
-            >
-              <svg xmlns='http://www.w3.org/2000/svg' className='w-4 h-4 mr-1' viewBox='0 0 20 20' fill='currentColor'>
-                <path fillRule='evenodd' d='M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z' clipRule='evenodd' />
-              </svg>
-              Print
             </button>
           </div>
         </div>

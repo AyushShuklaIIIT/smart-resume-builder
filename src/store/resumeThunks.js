@@ -6,11 +6,12 @@ import { setSkills } from "./slices/skillsSlice";
 import { setAchievements } from "./slices/achievementsSlice";
 import { setLoading, setSaving, setError } from "./slices/appSlice";
 import { setExperiences } from "./slices/experienceSlice";
+import { setExtracurricular } from "./slices/extracurricularSlice";
 
-export const fetchResume = (getToken) => async(dispatch) => {
+export const fetchResume = () => async(dispatch) => {
     dispatch(setLoading(true));
     try {
-        const { resume } = await fetchResumeAPI(getToken);
+        const { resume } = await fetchResumeAPI();
         if(resume) {
             dispatch(setPersonalInfo(resume.personalInfo || {}));
             dispatch(setExperiences(resume.experience || []));
@@ -18,6 +19,7 @@ export const fetchResume = (getToken) => async(dispatch) => {
             dispatch(setSkills(resume.skills || {}));
             dispatch(setProjects(resume.projects || []));
             dispatch(setAchievements(resume.achievements || []));
+            dispatch(setExtracurricular(resume.activities || []));
         }
     } catch (error) {
         dispatch(setError(error.message));
@@ -26,9 +28,9 @@ export const fetchResume = (getToken) => async(dispatch) => {
     }
 };
 
-export const saveResume = (getToken) => async (dispatch, getState) => {
+export const saveResume = () => async (dispatch, getState) => {
     dispatch(setSaving(true));
-    const { personalInfo, experience, education, skills, projects, achievements } = getState();
+    const { personalInfo, experience, education, skills, projects, achievements, extracurricular } = getState();
     const resumeData = {
         personalInfo,
         experience: experience.experiences,
@@ -36,10 +38,11 @@ export const saveResume = (getToken) => async (dispatch, getState) => {
         skills,
         projects: projects.projects,
         achievements: achievements.achievements,
+        activities: extracurricular.activities,
     };
 
     try {
-        await saveResumeAPI(getToken, resumeData);
+        await saveResumeAPI(resumeData);
     } catch(error) {
         dispatch(setError(error.message));
     } finally {

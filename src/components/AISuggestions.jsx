@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { store } from '../store';
 import { closeAiModal } from '../store/slices/appSlice';
-import { useAuth } from '@clerk/clerk-react';
 import { getAiSuggestionsAPI } from '../services/api';
 import ReactMarkdown from 'react-markdown';
 
@@ -41,9 +41,8 @@ const generatePrompt = (resumeData) => {
 
 const AISuggestions = () => {
   const dispatch = useAppDispatch();
-  const { getToken } = useAuth();
   const { isAiModalOpen } = useAppSelector((state) => state.app);
-  const resumeData = useAppSelector((state) => state);
+  const resumeData = store.getState();
 
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState('');
@@ -63,7 +62,7 @@ const AISuggestions = () => {
     
     try {
       const prompt = generatePrompt(resumeData);
-      const result = await getAiSuggestionsAPI(getToken, prompt);
+      const result = await getAiSuggestionsAPI(prompt);
       setSuggestions(result);
     } catch (err) {
       setError('Failed to get suggestions. Please try again later.');

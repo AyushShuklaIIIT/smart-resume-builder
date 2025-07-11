@@ -1,27 +1,21 @@
 const API_BASE_URL = 'http://localhost:3001/api';
 
-const getAuthHeaders = async (getToken) => {
-    const token = await getToken();
-    return {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-    };
-};
+const jsonHeaders = {
+    'Content-Type': 'application/json',
+}
 
-export const fetchResumeAPI = async (getToken) => {
-    const headers = await getAuthHeaders(getToken);
-    const response = await fetch(`${API_BASE_URL}/resume`, { headers });
+export const fetchResumeAPI = async () => {
+    const response = await fetch(`${API_BASE_URL}/resume`);
     if(!response.ok) {
         throw new Error('Failed to fetch resume');
     }
     return response.json();
 };
 
-export const saveResumeAPI = async (getToken, resumeData) => {
-    const headers = await getAuthHeaders(getToken);
+export const saveResumeAPI = async (resumeData) => {
     const response = await fetch(`${API_BASE_URL}/resume`, {
         method: 'POST',
-        headers,
+        headers: jsonHeaders,
         body: JSON.stringify(resumeData),
     });
     if(!response.ok) {
@@ -30,11 +24,10 @@ export const saveResumeAPI = async (getToken, resumeData) => {
     return response.json();
 }
 
-export const exportPdfAPI = async (getToken, htmlContent) => {
-    const headers = await getAuthHeaders(getToken);
+export const exportPdfAPI = async (htmlContent) => {
     const response = await fetch(`${API_BASE_URL}/resume/export`, {
         method: 'POST',
-        headers,
+        headers: jsonHeaders,
         body: JSON.stringify({ html: htmlContent }),
     });
     if(!response.ok) {
@@ -43,14 +36,10 @@ export const exportPdfAPI = async (getToken, htmlContent) => {
     return response.blob();
 }
 
-export const getAiSuggestionsAPI = async (getToken, prompt) => {
-    const token = await getToken();
+export const getAiSuggestionsAPI = async (prompt) => {
     const response = await fetch(`${API_BASE_URL}/resume/suggestions`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
+        headers: jsonHeaders,
         body: JSON.stringify({ prompt }),
     });
 
