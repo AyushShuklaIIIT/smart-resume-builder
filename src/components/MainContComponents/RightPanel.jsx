@@ -3,6 +3,7 @@ import { useReactToPrint } from 'react-to-print';
 import { useAppSelector } from '../../store/hooks';
 import { useAuth } from '@clerk/clerk-react';
 import { exportPdfAPI } from '../../services/api';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub } from 'react-icons/fa';
 
 const RightPanel = () => {
   const resumeRef = useRef(null);
@@ -153,25 +154,25 @@ const RightPanel = () => {
               <div className='contact-info text-sm text-gray-600 space-y-1'>
                 {personalInfo.email && (
                   <div className='flex items-center'>
-                    <span className='mr-2'>📧</span>
+                    <FaEnvelope className='mr-2 text-gray-500' />
                     <span>{personalInfo.email}</span>
                   </div>
                 )}
                 {personalInfo.phone && (
                   <div className='flex items-center'>
-                    <span className='mr-2'>📞</span>
+                    <FaPhone className='mr-2 text-gray-500' />
                     <span>{personalInfo.phone}</span>
                   </div>
                 )}
                 {personalInfo.location && (
                   <div className='flex items-center'>
-                    <span className='mr-2'>📍</span>
+                    <FaMapMarkerAlt className='mr-2 text-gray-500' />
                     <span>{personalInfo.location}</span>
                   </div>
                 )}
                 {personalInfo.linkedIn && (
                   <div className='flex items-center'>
-                    <span className='mr-2'>💼</span>
+                    <FaLinkedin className='mr-2 text-gray-500' />
                     <a href={personalInfo.linkedIn} target='_blank' rel='noopener noreferrer' className='text-[#0284c7] hover:underline'>
                       LinkedIn
                     </a>
@@ -179,7 +180,7 @@ const RightPanel = () => {
                 )}
                 {personalInfo.github && (
                   <div className='flex items-center'>
-                    <span className='mr-2'>🔗</span>
+                    <FaGithub className='mr-2 text-gray-500' />
                     <a href={personalInfo.github} target='_blank' rel='noopener noreferrer' className='text-[#0284c7] hover:underline'>
                       GitHub
                     </a>

@@ -6,6 +6,7 @@ import skillsSlice from './slices/skillsSlice';
 import projectsSlice from './slices/projectsSlice';
 import achievementsSlice from './slices/achievementsSlice';
 import appSlice from './slices/appSlice';
+import extracurricularSlice from './slices/extracurricularSlice';
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     skills: skillsSlice,
     projects: projectsSlice,
     achievements: achievementsSlice,
+    extracurricular: extracurricularSlice,
     app: appSlice,
   },
 });

@@ -7,6 +7,7 @@ import Projects from './Projects'
 import Achievements from './Achievements'
 import { useDispatch } from 'react-redux'
 import { openAiModal } from '../../store/slices/appSlice'
+import Extracurricular from './Extracurricular'
 
 const LeftPanel = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const LeftPanel = () => {
         <Skills></Skills>
         <Projects></Projects>
         <Achievements></Achievements>
+        <Extracurricular></Extracurricular>
 
         <div className='flex justify-center mt-6'>
           <button id='ai-suggestions-btn' type='button' className='flex items-center px-4 py-2 bg-[#0284c7] text-white font-medium rounded-md hover:bg-[#0369a1] focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:ring-offset-2 transition' onClick={handleOpenModal}>

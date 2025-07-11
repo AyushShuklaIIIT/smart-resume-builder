@@ -9,6 +9,7 @@ import {
   removeProjectHighlight,
   duplicateProject
 } from '../../store/slices/projectsSlice';
+import { FaProjectDiagram, FaCopy, FaTrash, FaPlus } from 'react-icons/fa';
 
 const Projects = () => { 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -132,13 +133,11 @@ const Projects = () => {
         onClick={toggleSection}
         type="button"
       >
-        <span>Projects ({projects.length})</span>
-        <svg 
-          xmlns='http://www.w3.org/2000/svg' 
-          className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-          viewBox='0 0 20 20' 
-          fill='currentColor'
-        >
+        <div className='flex items-center'>
+          <FaProjectDiagram className='mr-3 text-gray-500' />
+          <span>Projects ({projects.length})</span>
+        </div>
+        <svg xmlns='http://www.w3.org/2000/svg' className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} viewBox='0 0 20 20' fill='currentColor'>
           <path fillRule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clipRule="evenodd" />
         </svg>
       </button>
@@ -168,9 +167,7 @@ const Projects = () => {
                       className='text-blue-500 hover:text-blue-700 text-sm'
                       title='Duplicate project'
                     >
-                      <svg className='w-4 h-4' fill='currentColor' viewBox='0 0 20 20'>
-                        <path d='M4 4v12h12V4H4zm8 10H6v-2h6v2zm0-3H6V9h6v2zm0-3H6V6h6v2z' />
-                      </svg>
+                      <FaCopy className='w-4 h-4' />
                     </button>
                     {projects.length > 1 && (
                       <button
@@ -178,9 +175,7 @@ const Projects = () => {
                         className='text-red-500 hover:text-red-700 text-sm'
                         title='Remove project'
                       >
-                        <svg className='w-4 h-4' fill='currentColor' viewBox='0 0 20 20'>
-                          <path fillRule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z' clipRule='evenodd' />
-                        </svg>
+                        <FaTrash className='w-4 h-4' />
                       </button>
                     )}
                   </div>
@@ -299,9 +294,7 @@ const Projects = () => {
                             onClick={() => handleRemoveHighlight(project.id, highlightIndex)}
                             className='text-red-500 hover:text-red-700'
                           >
-                            <svg className='w-4 h-4' fill='currentColor' viewBox='0 0 20 20'>
-                              <path fillRule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z' clipRule='evenodd' />
-                            </svg>
+                            <FaTrash className='w-4 h-4' />
                           </button>
                         )}
                       </div>
@@ -310,9 +303,7 @@ const Projects = () => {
                       onClick={() => handleAddHighlight(project.id)}
                       className='flex items-center text-sm text-[#0284c7] hover:text-[#075985]'
                     >
-                      <svg className='w-4 h-4 mr-1' fill='currentColor' viewBox='0 0 20 20'>
-                        <path fillRule='evenodd' d='M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z' clipRule='evenodd' />
-                      </svg>
+                      <FaPlus className='w-4 h-4 mr-1' />
                       Add Highlight
                     </button>
                   </div>
@@ -328,9 +319,7 @@ const Projects = () => {
           onClick={handleAddProject}
           className='flex items-center text-sm text-[#0284c7] hover:text-[#075985] mt-4 transition-colors duration-200'
         >
-          <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 mr-1' viewBox='0 0 20 20' fill='currentColor'>
-            <path fillRule='evenodd' d='M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z' clipRule='evenodd' />
-          </svg>
+          <FaPlus className='w-4 h-4 mr-1' />
           Add Project
         </button>
 
