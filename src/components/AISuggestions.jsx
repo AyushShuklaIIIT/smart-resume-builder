@@ -3,6 +3,7 @@ import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { closeAiModal } from '../store/slices/appSlice';
 import { useAuth } from '@clerk/clerk-react';
 import { getAiSuggestionsAPI } from '../services/api';
+import ReactMarkdown from 'react-markdown';
 
 const generatePrompt = (resumeData) => {
   const { personalInfo, experience, education, skills, projects, achievements } = resumeData;
@@ -104,9 +105,9 @@ const AISuggestions = () => {
             {isLoading && <p className="text-gray-500 text-sm">Getting suggestions from the AI, please wait...</p>}
             {error && <p className="text-red-500 text-sm">{error}</p>}
             {suggestions && (
-              // Using a div with dangerouslySetInnerHTML to render markdown, or use a library like 'react-markdown' for a safer approach.
-              // For simplicity, we'll use a pre-wrap for now.
-              <pre className="text-gray-700 text-sm whitespace-pre-wrap font-sans">{suggestions}</pre>
+              <ReactMarkdown>
+                {suggestions}
+              </ReactMarkdown>
             )}
             {!isLoading && !error && !suggestions && <p className="text-gray-500 text-sm">AI suggestions will be displayed here...</p>}
           </div>
