@@ -101,7 +101,7 @@ const AISuggestions = () => {
               {isLoading ? 'Generating...' : 'Generate Suggestions'}
             </button>
           </div>
-          <div className="mt-6 p-4 bg-gray-50 rounded-md border border-gray-200 min-h-[150px] max-h-[400px] overflow-y-auto">
+          <div className="prose prose-sm max-w-none mt-6 p-4 bg-gray-50 rounded-md border border-gray-200 min-h-[150px] max-h-[400px] overflow-y-auto">
             {isLoading && <p className="text-gray-500 text-sm">Getting suggestions from the AI, please wait...</p>}
             {error && <p className="text-red-500 text-sm">{error}</p>}
             {suggestions && (
