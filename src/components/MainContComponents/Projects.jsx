@@ -9,7 +9,7 @@ import {
   removeProjectHighlight,
   duplicateProject
 } from '../../store/slices/projectsSlice';
-import { FaProjectDiagram, FaCopy, FaTrash, FaPlus } from 'react-icons/fa';
+import { FaCopy, FaTrash, FaPlus } from 'react-icons/fa';
 
 const Projects = () => { 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -134,7 +134,6 @@ const Projects = () => {
         type="button"
       >
         <div className='flex items-center'>
-          <FaProjectDiagram className='mr-3 text-gray-500' />
           <span>Projects ({projects.length})</span>
         </div>
         <svg xmlns='http://www.w3.org/2000/svg' className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} viewBox='0 0 20 20' fill='currentColor'>
