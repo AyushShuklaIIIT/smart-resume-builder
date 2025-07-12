@@ -17,23 +17,26 @@ const generatePrompt = (resumeData) => {
     - Job Title: ${personalInfo.jobTitle}
     - Contact: ${personalInfo.email}, ${personalInfo.phone}, ${personalInfo.location}
     - Links: LinkedIn (${personalInfo.linkedIn}), GitHub (${personalInfo.github})
+    - Professional Summary: ${personalInfo.summary}
 
     **Experience:**
     ${experience.experiences.map(exp => `- ${exp.position} at ${exp.company}: ${exp.responsibilities}`).join('\n')}
 
     **Education:**
-    ${education.educationEntries.map(edu => `- ${edu.degree} from ${edu.institution}`).join('\n')}
+    ${education.educationEntries.map(edu => `- ${edu.degree} from ${edu.institution}. Achieved ${edu.gpa} GPA`).join('\n')}
 
     **Skills:**
-    - Languages: ${skills.programming.join(', ')}
-    - Frameworks: ${skills.tools.join(', ')}
+    - Technical Skills: ${skills.technical.join(', ')}
+    - Tools & Technologies: ${skills.tools.join(', ')}
     - Soft Skills: ${skills.soft.join(', ')}
+    - Programming Languages: ${skills.programming.join(', ')}
+    - Languages: ${skills.languages.join(', ')}
 
     **Projects:**
-    ${projects.projects.map(proj => `- ${proj.name}: ${proj.description}`).join('\n')}
+    ${projects.projects.map(proj => `- ${proj.name}: ${proj.description}\nTech Stack: ${proj.technologies}\nLive Demo: ${proj.url}\nGitHub Link: ${proj.github}\nHighlights: ${proj.highlights.map((highlight) => `\n  - ${highlight}`).join('')}`).join('\n')}
 
     **Achievements:**
-    ${achievements.achievements.map(ach => `- ${ach.description}`).join('\n')}
+    ${achievements.achievements.map(ach => `- ${ach.title}: ${ach.description}`).join('\n')}
 
     Now, provide your expert suggestions below:
   `;

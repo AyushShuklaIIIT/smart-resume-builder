@@ -81,22 +81,11 @@ const RightPanel = () => {
       console.error('Failed to export PDF:', error);
       alert('There was an error exporting your resume. Please check the console for details.')
     } finally {
-      if(resumeRef.current) {
+      if (resumeRef.current) {
         resumeRef.current.classList.remove('pdf-export-mode');
       }
       setIsExporting(false);
     }
-  };
-
-  // Combine all skills from different categories
-  const getAllSkills = () => {
-    const allSkills = [];
-    Object.keys(skillsData).forEach(category => {
-      if (skillsData[category] && Array.isArray(skillsData[category])) {
-        allSkills.push(...skillsData[category]);
-      }
-    });
-    return allSkills;
   };
 
   // Format date helper
@@ -108,6 +97,8 @@ const RightPanel = () => {
       month: 'short'
     });
   };
+
+  const hasSkills = () => Object.values(skillsData).some(category => Array.isArray(category) && category.length > 0);
 
   // Format date range
   const formatDateRange = (startDate, endDate, isCurrent = false) => {
@@ -281,21 +272,21 @@ const RightPanel = () => {
           )}
 
           {/* Skills Section */}
-          {getAllSkills().length > 0 && (
+          {hasSkills() && (
             <div className='section mb-6'>
-              <h2 className='text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1'>
-                Skills
-              </h2>
-              <div className='skills-list flex flex-wrap gap-2'>
-                {getAllSkills().map((skill) => (
-                  <span
-                    key={skill}
-                    className='bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full'
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+              <h2 className='text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1'>Skills</h2>
+              {Object.entries(skillsData).map(([category, skills]) => (
+                (Array.isArray(skills) && skills.length > 0) && (
+                  <div key={category} className="mb-3">
+                    <h3 className="font-semibold text-gray-700 capitalize mb-2">{category.replace(/_/g, ' ')}:</h3>
+                    <div className='skills-list flex flex-wrap gap-2'>
+                      {skills.map((skill) => (
+                        <span key={skill} className='bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full'>{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+                )
+              ))}
             </div>
           )}
 
@@ -387,8 +378,7 @@ const RightPanel = () => {
           )}
 
           {/* Empty state */}
-          {!personalInfo.fullName && !experienceData.length && !educationData.length &&
-            getAllSkills().length === 0 && !projectsData.length && !achievementsData.length && (
+          {!personalInfo.fullName && !experienceData.length && !educationData.length && !hasSkills() && !projectsData.length && !achievementsData.length && (
               <div className='text-center py-12'>
                 <div className='text-gray-400 text-6xl mb-4'>📄</div>
                 <h3 className='text-lg font-medium text-gray-900 mb-2'>Start Building Your Resume</h3>
