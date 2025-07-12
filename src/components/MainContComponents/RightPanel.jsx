@@ -137,7 +137,7 @@ const RightPanel = () => {
           {/* Personal Information */}
           <div className='flex items-center mb-6'>
             {personalInfo.photo && (
-              <div className='w-24 h-24 rounded-full mr-6 overflow-hidden flex-shrink-0'>
+              <div className='w-44 h-44 rounded-full mr-6 overflow-hidden flex-shrink-0'>
                 <img src={personalInfo.photo} alt='Profile' className='w-full h-full object-cover' />
               </div>
             )}
