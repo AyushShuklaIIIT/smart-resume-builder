@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = 'https://resume-backend-service-j76y.onrender.com/api';
 
 const jsonHeaders = {
     'Content-Type': 'application/json',
