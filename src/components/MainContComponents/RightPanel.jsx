@@ -1,10 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useAppSelector } from '../../store/hooks';
 import { exportPdfAPI } from '../../services/api';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaDownload } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaDownload, FaSpinner } from 'react-icons/fa';
 
 const RightPanel = () => {
   const resumeRef = useRef(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   const personalInfo = useAppSelector((state) => state.personalInfo);
   const { experiences } = useAppSelector((state) => state.experience);
@@ -21,42 +22,46 @@ const RightPanel = () => {
 
   // Handle PDF export
   const handleExportPDF = async () => {
-    if (!resumeRef.current) {
-      console.error('Resume preview element is not available.');
-      alert('Could not export PDF. Please try again in a moment.');
+    if (isExporting || !resumeRef.current) {
       return;
     }
 
-    const linkedStyles = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(link => link.outerHTML).join('');
-
-    const inlineStyles = Array.from(document.querySelectorAll('style')).map(style => style.innerHTML).join('');
-
-    const resumeHtml = resumeRef.current.innerHTML;
-
-    const fullHtml = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Resume</title>
-        ${linkedStyles}
-        <style>
-        ${inlineStyles}
-          body {
-            -webkit-print-color-adjust: exact !important;
-          }
-        </style>
-      </head>
-      <body>
-      <div class="p-6">
-        ${resumeHtml}
-      </div>
-      </body>
-      </html>
-    `;
+    setIsExporting(true);
 
     try {
+      const cssPromises = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(link => fetch(link.href).then(res => res.text()));
+
+      const cssStyles = await Promise.all(cssPromises);
+
+      const inlineStyles = Array.from(document.querySelectorAll('style')).map(style => style.innerHTML).join('');
+
+      const resumeHtml = resumeRef.current.innerHTML;
+
+      const fullHtml = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Resume</title>
+          <style>
+            ${cssStyles.join('\n')}
+            ${inlineStyles}
+
+            body {
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="p-6">
+            ${resumeHtml}
+          </div>
+        </body>
+      </html>
+      `;
+
       const blob = await exportPdfAPI(fullHtml);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -64,11 +69,13 @@ const RightPanel = () => {
       a.download = `${personalInfo.fullName || 'Resume'}_Resume.pdf`;
       document.body.appendChild(a);
       a.click();
-      a.remove();
+      document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Failed to export PDF:", error);
-      alert('There was an error exporting your resume. Please check the console for details.');
+      console.error('Failed to export PDF:', error);
+      alert('There was an error exporting your resume. Please check the console for details.')
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -108,10 +115,20 @@ const RightPanel = () => {
           <div className='flex space-x-2 no-print'>
             <button
               onClick={handleExportPDF}
-              className='flex items-center px-3 py-1.5 bg-[#0284c7] text-white text-sm font-medium rounded-md hover:bg-[#0369a1] focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] transition-colors'
+              disabled={isExporting}
+              className='flex items-center px-3 py-1.5 bg-[#0284c7] text-white text-sm font-medium rounded-md hover:bg-[#0369a1] focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] transition-colors disabled:bg-[#0369a1] disabled:opacity-70 disabled:cursor-not-allowed'
             >
-              <FaDownload className='w-4 h-4 mr-1' />
-              Export as PDF
+              {isExporting ? (
+                <>
+                  <FaSpinner className='w-4 h-4 mr-2 animate-spin' />
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <FaDownload className='w-4 h-4 mr-1' />
+                  Export as PDF
+                </>
+              )}
             </button>
           </div>
         </div>
