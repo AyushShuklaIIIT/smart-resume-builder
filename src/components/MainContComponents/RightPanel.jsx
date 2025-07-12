@@ -27,6 +27,7 @@ const RightPanel = () => {
     }
 
     setIsExporting(true);
+    resumeRef.current.classList.add('pdf-export-mode');
 
     try {
       const cssPromises = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(link => fetch(link.href).then(res => res.text()));
@@ -36,6 +37,7 @@ const RightPanel = () => {
       const inlineStyles = Array.from(document.querySelectorAll('style')).map(style => style.innerHTML).join('');
 
       const resumeHtml = resumeRef.current.innerHTML;
+      resumeRef.current.classList.remove('pdf-export-mode');
 
       const fullHtml = `
         <!DOCTYPE html>
@@ -47,6 +49,10 @@ const RightPanel = () => {
           <style>
             ${cssStyles.join('\n')}
             ${inlineStyles}
+
+            .pdf-export-mode .resume-preview {
+              max-width: 800px !important;
+            }
 
             body {
               -webkit-print-color-adjust: exact !important;
@@ -75,6 +81,9 @@ const RightPanel = () => {
       console.error('Failed to export PDF:', error);
       alert('There was an error exporting your resume. Please check the console for details.')
     } finally {
+      if(resumeRef.current) {
+        resumeRef.current.classList.remove('pdf-export-mode');
+      }
       setIsExporting(false);
     }
   };
