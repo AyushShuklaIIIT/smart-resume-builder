@@ -14,11 +14,9 @@ import { FaCopy, FaTrash, FaPlus } from 'react-icons/fa';
 const Projects = () => { 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Get data from Redux store
   const dispatch = useAppDispatch();
   const { projects } = useAppSelector(state => state.projects);
 
-  // Toggle section visibility
   const toggleSection = () => {
     setIsExpanded(!isExpanded);
   };
@@ -31,27 +29,22 @@ const Projects = () => {
     dispatch(updateProjectHighlight({ projectId, highlightIndex, value }));
   };
 
-  // Add new highlight to project - dispatch Redux action
   const handleAddHighlight = (projectId) => {
     dispatch(addProjectHighlight(projectId));
   };
 
-  // Remove highlight from project - dispatch Redux action
   const handleRemoveHighlight = (projectId, highlightIndex) => {
     dispatch(removeProjectHighlight({ projectId, highlightIndex }));
   };
 
-  // Add new project - dispatch Redux action
   const handleAddProject = () => {
     dispatch(addProject());
   };
 
-  // Remove project - dispatch Redux action
   const handleRemoveProject = (projectId) => {
     dispatch(removeProject(projectId));
   };
 
-  // Duplicate project - dispatch Redux action
   const handleDuplicateProject = (projectId) => {
     dispatch(duplicateProject(projectId));
   };
@@ -62,7 +55,6 @@ const Projects = () => {
     if (!project.technologies.trim()) errors.technologies = 'Technologies are required';
     if (!project.description.trim()) errors.description = 'Description is required';
     
-    // URL validation
     if (project.url && !isValidUrl(project.url)) {
       errors.url = 'Please enter a valid URL';
     }
@@ -73,7 +65,6 @@ const Projects = () => {
     return errors;
   };
 
-  // URL validation helper - keep as is
   const isValidUrl = (string) => {
     try {
       new URL(string);
@@ -83,7 +74,6 @@ const Projects = () => {
     }
   };
 
-  // Get project status color - keep as is
   const getStatusColor = (status) => {
     const colors = {
       completed: 'bg-green-100 text-green-800',
@@ -93,7 +83,6 @@ const Projects = () => {
     return colors[status] || 'bg-gray-100 text-gray-800';
   };
 
-  // Enhanced form fields configuration - keep as is
   const projectsArr = [
     {
       label: "Project Name",
@@ -127,7 +116,6 @@ const Projects = () => {
 
   return (
     <div className='mb-6 border border-gray-200 rounded-md'>
-      {/* Header with toggle button */}
       <button 
         className='flex justify-between items-center w-full px-4 py-3 text-left font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-t-md focus:outline-none'
         onClick={toggleSection}
@@ -141,7 +129,6 @@ const Projects = () => {
         </svg>
       </button>
 
-      {/* Collapsible content */}
       <div className={`px-4 py-3 border-t border-gray-200 ${isExpanded ? 'block' : 'hidden'}`}>
         <div id="project-items">
           {projects.map((project, index) => {
@@ -149,7 +136,6 @@ const Projects = () => {
             
             return (
               <div key={project.id} className='project-item mb-6 pb-6 border-b border-gray-200 last:border-b-0'>
-                {/* Project header with actions */}
                 <div className='flex justify-between items-center mb-4'>
                   <div className='flex items-center space-x-3'>
                     <h4 className='font-semibold text-gray-800'>
@@ -181,7 +167,6 @@ const Projects = () => {
                 </div>
 
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  {/* Dynamic form fields */}
                   {projectsArr.map((item) => (
                     <div key={item.id}>
                       <label htmlFor={`${item.id}-${project.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
@@ -205,7 +190,6 @@ const Projects = () => {
                     </div>
                   ))}
 
-                  {/* Project dates */}
                   <div>
                     <label htmlFor={`startDate-${project.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Start Date
@@ -232,7 +216,6 @@ const Projects = () => {
                     />
                   </div>
 
-                  {/* Project status */}
                   <div>
                     <label htmlFor={`status-${project.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Project Status
@@ -249,7 +232,6 @@ const Projects = () => {
                     </select>
                   </div>
 
-                  {/* Project description */}
                   <div className='md:col-span-2'>
                     <label htmlFor={`description-${project.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Description *
@@ -270,7 +252,6 @@ const Projects = () => {
                     )}
                   </div>
 
-                  {/* Key highlights */}
                   <div className='md:col-span-2'>
                     <label 
                       htmlFor={`highlight-${project.id}-0`} 
@@ -312,7 +293,6 @@ const Projects = () => {
           })}
         </div>
 
-        {/* Add Project Button */}
         <button 
           type='button' 
           onClick={handleAddProject}
@@ -322,7 +302,6 @@ const Projects = () => {
           Add Project
         </button>
 
-        {/* Projects summary */}
         <div className='mt-4 p-3 bg-indigo-50 rounded-md'>
           <div className='flex justify-between items-center mb-2'>
             <p className='text-sm text-indigo-700'>

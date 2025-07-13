@@ -4,7 +4,6 @@ import { updateField } from '../../store/slices/personalInfoSlice';
 import { FaUser, FaCamera } from 'react-icons/fa';
 
 const PersonalInfo = () => {
-  // State management
   const [isExpanded, setIsExpanded] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const dispatch = useAppDispatch();
@@ -12,12 +11,10 @@ const PersonalInfo = () => {
     return state.personalInfo || {};
   });
 
-  // Toggle section visibility
   const toggleSection = () => {
     setIsExpanded(!isExpanded);
   };
 
-  // Handle input changes
   const handleInputChange = (field, value) => {
     dispatch(updateField({ field, value }));
   };
@@ -51,23 +48,19 @@ const PersonalInfo = () => {
     }
   };
 
-  // Form validation with null checks
   const validatePersonalInfo = () => {
     const errors = {};
     
-    // Add null checks for personalInfo
     if (!personalInfo?.fullName?.trim()) errors.fullName = 'Full name is required';
     if (!personalInfo?.jobTitle?.trim()) errors.jobTitle = 'Job title is required';
     if (!personalInfo?.email?.trim()) errors.email = 'Email is required';
     if (!personalInfo?.phone?.trim()) errors.phone = 'Phone number is required';
     
-    // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (personalInfo?.email && !emailRegex.test(personalInfo.email)) {
       errors.email = 'Please enter a valid email address';
     }
     
-    // Phone format validation (basic)
     const phoneRegex = /^[\d\s\-+()]{10,}$/;
     if (personalInfo?.phone && !phoneRegex.test(personalInfo.phone)) {
       errors.phone = 'Please enter a valid phone number';
@@ -78,7 +71,6 @@ const PersonalInfo = () => {
 
   const errors = validatePersonalInfo();
 
-  // Enhanced form fields configuration
   const personalInfoArr = [
     {
       id: "fullName",
@@ -141,18 +133,17 @@ const PersonalInfo = () => {
     }
   ];
 
-  // Helper function to calculate completion percentage
   function getCompletionPercentage() {
-    if (!personalInfo) return 0; // Add null check
+    if (!personalInfo) return 0;
     
     const requiredFields = ['fullName', 'jobTitle', 'email', 'phone'];
     const filledRequired = requiredFields.filter(field => personalInfo[field]?.trim()).length;
     const optionalFields = ['location', 'summary', 'linkedIn', 'github', 'website'];
     const filledOptional = optionalFields.filter(field => personalInfo[field]?.trim()).length;
-    
-    const requiredWeight = 60; // 60% weight for required fields
-    const optionalWeight = 40; // 40% weight for optional fields
-    
+
+    const requiredWeight = 60;
+    const optionalWeight = 40;
+
     const requiredScore = (filledRequired / requiredFields.length) * requiredWeight;
     const optionalScore = (filledOptional / optionalFields.length) * optionalWeight;
     
@@ -161,7 +152,6 @@ const PersonalInfo = () => {
 
   return (
     <div className='mb-6 border border-gray-200 rounded-md'>
-      {/* Header with toggle button */}
       <button 
         className='flex justify-between items-center w-full px-4 py-3 text-left font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-t-md focus:outline-none'
         onClick={toggleSection}
@@ -178,10 +168,8 @@ const PersonalInfo = () => {
         </svg>
       </button>
 
-      {/* Collapsible content */}
       <div className={`px-4 py-3 border-t border-gray-200 ${isExpanded ? 'block' : 'hidden'}`}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          {/* Main personal info fields */}
           <div className='md:col-span-2 flex items-center gap-4 p-2 rounded-md'>
             <div className='w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0'>
               {personalInfo.photo ? (
@@ -208,7 +196,7 @@ const PersonalInfo = () => {
               <input 
                 type={info.type} 
                 id={info.id}
-                value={personalInfo?.[info.id] || ''} // Add null check
+                value={personalInfo?.[info.id] || ''} 
                 onChange={(e) => handleInputChange(info.id, e.target.value)}
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] ${
                   errors[info.id] ? 'border-red-500' : 'border-gray-300'
@@ -222,7 +210,6 @@ const PersonalInfo = () => {
             </div>
           ))}
 
-          {/* Additional fields */}
           {additionalFields.map((field) => (
             <div key={field.id} className='md:col-span-2'>
               <label htmlFor={field.id} className='block text-sm font-medium text-gray-700 mb-1'>
@@ -232,7 +219,7 @@ const PersonalInfo = () => {
               <input 
                 type={field.type} 
                 id={field.id}
-                value={personalInfo?.[field.id] || ''} // Add null check
+                value={personalInfo?.[field.id] || ''}
                 onChange={(e) => handleInputChange(field.id, e.target.value)}
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] ${
                   errors[field.id] ? 'border-red-500' : 'border-gray-300'
@@ -246,7 +233,6 @@ const PersonalInfo = () => {
             </div>
           ))}
 
-          {/* Professional Summary */}
           <div className='md:col-span-2'>
             <label htmlFor="summary" className='block text-sm font-medium text-gray-700 mb-1'>
               Professional Summary
@@ -254,7 +240,7 @@ const PersonalInfo = () => {
             <textarea 
               id="summary"
               rows={4}
-              value={personalInfo?.summary || ''} // Add null check
+              value={personalInfo?.summary || ''}
               onChange={(e) => handleInputChange('summary', e.target.value)}
               className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]' 
               placeholder='Brief professional summary highlighting your key skills, experience, and career objectives...'
@@ -265,7 +251,6 @@ const PersonalInfo = () => {
           </div>
         </div>
 
-        {/* Form completion status */}
         <div className='mt-4 p-3 bg-blue-50 rounded-md'>
           <div className='flex items-center justify-between'>
             <div>

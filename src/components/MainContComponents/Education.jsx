@@ -21,17 +21,14 @@ const Education = () => {
     dispatch(updateEducation({ id: educationId, field, value }));
   };
 
-  // Handle current education checkbox - dispatch Redux action
   const handleCurrentChange = (educationId, isCurrent) => {
     dispatch(updateEducationCurrentStatus({ id: educationId, current: isCurrent }));
   };
 
-  // Add new education entry - dispatch Redux action
   const handleAddEducation = () => {
     dispatch(addEducation());
   };
 
-  // Remove education entry - dispatch Redux action
   const handleRemoveEducation = (educationId) => {
     dispatch(removeEducation(educationId));
   };
@@ -45,7 +42,6 @@ const Education = () => {
     return errors;
   };
 
-  // Enhanced form fields configuration - keep as is
   const educationItems = [
     {
       id: "institution",
@@ -79,7 +75,6 @@ const Education = () => {
 
   return (
     <div className='mb-6 border border-gray-200 rounded-md'>
-      {/* Header with toggle button */}
       <button 
         className='flex justify-between items-center w-full px-4 py-3 text-left font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-t-md focus:outline-none'
         onClick={toggleSection}
@@ -96,7 +91,6 @@ const Education = () => {
         </svg>
       </button>
 
-      {/* Collapsible content */}
       <div className={`px-4 py-3 border-t border-gray-200 ${isExpanded ? 'block' : 'hidden'}`}>
         <div id="education-items">
           {educationEntries.map((education, index) => {
@@ -104,7 +98,6 @@ const Education = () => {
             
             return (
               <div key={education.id} className="education-item mb-4 pb-4 border-b border-gray-200 last:border-b-0">
-                {/* Education header with remove button */}
                 <div className='flex justify-between items-center mb-4'>
                   <h4 className='font-semibold text-gray-800'>
                     Education {index + 1}
@@ -125,7 +118,6 @@ const Education = () => {
                 </div>
 
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  {/* Dynamic form fields */}
                   {educationItems.map((item) => (
                     <div key={item.id}>
                       <label htmlFor={`${item.id}-${education.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
@@ -149,7 +141,6 @@ const Education = () => {
                     </div>
                   ))}
 
-                  {/* End date with current education checkbox */}
                   <div>
                     <label htmlFor={`endDate-${education.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       End Date
@@ -186,7 +177,6 @@ const Education = () => {
                     )}
                   </div>
 
-                  {/* GPA field */}
                   <div>
                     <label htmlFor={`gpa-${education.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       GPA (Optional)
@@ -201,7 +191,6 @@ const Education = () => {
                     />
                   </div>
 
-                  {/* Description/Additional info */}
                   <div className='md:col-span-2'>
                     <label htmlFor={`description-${education.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Additional Information
@@ -221,7 +210,6 @@ const Education = () => {
           })}
         </div>
 
-        {/* Add Education Button */}
         <button 
           type='button' 
           onClick={handleAddEducation}
@@ -233,7 +221,6 @@ const Education = () => {
           Add Education
         </button>
 
-        {/* Summary info */}
         <div className='mt-4 p-3 bg-green-50 rounded-md'>
           <p className='text-sm text-green-700'>
             <strong>{educationEntries.length}</strong> education entr{educationEntries.length !== 1 ? 'ies' : 'y'} added

@@ -26,7 +26,6 @@ const Extracurricular = () => {
 
   return (
     <div className='mb-6 border border-gray-200 rounded-md'>
-      {/* Header with toggle button - styled like Projects.jsx */}
       <button 
         className='flex justify-between items-center w-full px-4 py-3 text-left font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-t-md focus:outline-none'
         onClick={() => setIsExpanded(!isExpanded)}
@@ -44,7 +43,6 @@ const Extracurricular = () => {
         <div>
           {activities.map((activity, index) => (
             <div key={activity.id} className="mb-6 pb-6 border-b border-gray-200 last:border-b-0">
-              {/* Item header with actions - styled like Projects.jsx */}
               <div className='flex justify-between items-center mb-4'>
                 <h4 className='font-semibold text-gray-800'>
                   Activity {index + 1}
@@ -62,7 +60,6 @@ const Extracurricular = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Title */}
                 <div className='md:col-span-2'>
                   <label htmlFor={`activity-title-${activity.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                     Title / Role
@@ -77,7 +74,6 @@ const Extracurricular = () => {
                   />
                 </div>
 
-                {/* Organization */}
                 <div className='md:col-span-2'>
                   <label htmlFor={`activity-org-${activity.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                     Organization / Club
@@ -92,7 +88,6 @@ const Extracurricular = () => {
                   />
                 </div>
                 
-                {/* Description */}
                 <div className='md:col-span-2'>
                   <label htmlFor={`activity-desc-${activity.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                     Description
@@ -111,7 +106,6 @@ const Extracurricular = () => {
           ))}
         </div>
 
-        {/* Add Activity Button - styled like Projects.jsx */}
         <button 
           type='button' 
           onClick={handleAddActivity}
@@ -121,7 +115,6 @@ const Extracurricular = () => {
           Add Activity
         </button>
 
-        {/* Summary Box - styled like Projects.jsx */}
         <div className='mt-4 p-3 bg-yellow-50 rounded-md'>
           <p className='text-sm text-yellow-800'>
             <strong>{activities.length}</strong> extra-curricular activit{activities.length !== 1 ? 'ies' : 'y'} added.

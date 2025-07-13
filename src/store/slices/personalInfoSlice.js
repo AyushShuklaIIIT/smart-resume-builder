@@ -18,10 +18,8 @@ export const personalInfoSlice = createSlice({
   initialState,
   reducers: {
     updateField: (state, action) => {
-      console.log('🔧 UpdateField reducer called:', action.payload);
       const { field, value } = action.payload;
       state[field] = value;
-      console.log('🔧 Updated state:', state);
     },
     updatePersonalInfo: (state, action) => {
       return { ...state, ...action.payload };

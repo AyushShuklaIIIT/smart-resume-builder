@@ -21,12 +21,10 @@ const Skills = () => {
     }
   };
 
-  // Remove skill from specific category
   const handleRemoveSkill = (category, skillToRemove) => {
     dispatch(removeSkill({ category, skill: skillToRemove }));
   };
 
-  // Handle bulk skills input (comma-separated)
   const handleBulkSkillsInput = (category, inputValue) => {
     if (inputValue.trim()) {
       const skills = inputValue
@@ -40,7 +38,6 @@ const Skills = () => {
     }
   };
 
-  // Handle Enter key to add skill
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -48,7 +45,6 @@ const Skills = () => {
     }
   };
 
-  // Skill categories configuration
   const skillCategories = [
     {
       id: 'technical',
@@ -82,12 +78,10 @@ const Skills = () => {
     }
   ];
 
-  // Get total skills count
   const getTotalSkills = () => {
     return Object.values(skillsData).reduce((total, skills) => total + skills.length, 0);
   };
 
-  // Get skill level color
   const getSkillColor = (category) => {
     const colors = {
       technical: 'bg-blue-100 text-blue-800',
@@ -101,7 +95,6 @@ const Skills = () => {
 
   return (
     <div className='mb-6 border border-gray-200 rounded-md'>
-      {/* Header with toggle button */}
       <button
         className='flex justify-between items-center w-full px-4 py-3 text-left font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-t-md focus:outline-none'
         onClick={toggleSection}
@@ -118,9 +111,7 @@ const Skills = () => {
         </svg>
       </button>
 
-      {/* Collapsible content */}
       <div className={`px-4 py-3 border-t border-gray-200 ${isExpanded ? 'block' : 'hidden'}`}>
-        {/* Category tabs */}
         <div className='mb-4'>
           <div className='flex flex-wrap gap-2 mb-3'>
             {skillCategories.map((category) => (
@@ -141,7 +132,6 @@ const Skills = () => {
           </p>
         </div>
 
-        {/* Add skill input */}
         <div className='mb-4'>
           <label htmlFor="skill-input" className='block text-sm font-medium text-gray-700 mb-1'>
             Add to {skillCategories.find(cat => cat.id === activeCategory)?.label}
@@ -166,7 +156,6 @@ const Skills = () => {
           </div>
         </div>
 
-        {/* Bulk add */}
         <div className='mb-4'>
           <label htmlFor="bulk-skills-input" className='block text-sm font-medium text-gray-700 mb-1'>
             Or add multiple skills (comma-separated)
@@ -183,7 +172,6 @@ const Skills = () => {
           />
         </div>
 
-        {/* Skills display for active category */}
         <div className='mb-4'>
           <h4 className='text-sm font-medium text-gray-700 mb-2'>
             {skillCategories.find(cat => cat.id === activeCategory)?.label}
@@ -212,7 +200,6 @@ const Skills = () => {
           </div>
         </div>
 
-        {/* All skills overview */}
         <div className='mt-6 p-4 bg-gray-50 rounded-md'>
           <h4 className='text-sm font-medium text-gray-700 mb-3'>Skills Overview</h4>
           <div className='space-y-3'>
@@ -239,7 +226,6 @@ const Skills = () => {
           )}
         </div>
 
-        {/* Skills statistics */}
         <div className='mt-4 p-3 bg-blue-50 rounded-md'>
           <div className='flex justify-between items-center'>
             <p className='text-sm text-blue-700'>

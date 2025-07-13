@@ -53,7 +53,6 @@ const AISuggestions = () => {
 
   const handleCloseModal = () => {
     dispatch(closeAiModal());
-    // Reset state when closing
     setSuggestions('');
     setError('');
   };

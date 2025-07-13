@@ -14,13 +14,11 @@ const RightPanel = () => {
   const { projects } = useAppSelector((state) => state.projects);
   const { achievements } = useAppSelector((state) => state.achievements);
 
-  // Data aliases for rendering
   const experienceData = experiences || [];
   const educationData = educationEntries || [];
   const projectsData = projects || [];
   const achievementsData = achievements || [];
 
-  // Handle PDF export
   const handleExportPDF = async () => {
     if (isExporting || !resumeRef.current) {
       return;
@@ -88,7 +86,6 @@ const RightPanel = () => {
     }
   };
 
-  // Format date helper
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString + '-01');
@@ -100,7 +97,6 @@ const RightPanel = () => {
 
   const hasSkills = () => Object.values(skillsData).some(category => Array.isArray(category) && category.length > 0);
 
-  // Format date range
   const formatDateRange = (startDate, endDate, isCurrent = false) => {
     const start = formatDate(startDate);
     const end = isCurrent ? 'Present' : formatDate(endDate);
@@ -134,7 +130,6 @@ const RightPanel = () => {
         </div>
 
         <div className='border border-gray-200 rounded-md p-6 bg-white resume-preview' ref={resumeRef}>
-          {/* Personal Information */}
           <div className='flex items-center mb-6'>
             {personalInfo.photo && (
               <div className='w-44 h-44 rounded-full mr-6 overflow-hidden flex-shrink-0'>
@@ -187,7 +182,6 @@ const RightPanel = () => {
             </div>
           </div>
 
-          {/* Professional Summary */}
           {personalInfo.summary && (
             <div className='section mb-6'>
               <h2 className='text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1'>
@@ -197,7 +191,6 @@ const RightPanel = () => {
             </div>
           )}
 
-          {/* Experience Section */}
           {experienceData.length > 0 && experienceData.some(exp => exp.company || exp.position) && (
             <div className='section mb-6'>
               <h2 className='text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1'>
@@ -230,7 +223,6 @@ const RightPanel = () => {
             </div>
           )}
 
-          {/* Education Section */}
           {educationData.length > 0 && educationData.some(edu => edu.institution || edu.degree) && (
             <div className='section mb-6'>
               <h2 className='text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1'>
@@ -271,7 +263,6 @@ const RightPanel = () => {
             </div>
           )}
 
-          {/* Skills Section */}
           {hasSkills() && (
             <div className='section mb-6'>
               <h2 className='text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1'>Skills</h2>
@@ -290,7 +281,6 @@ const RightPanel = () => {
             </div>
           )}
 
-          {/* Projects Section */}
           {projectsData.length > 0 && projectsData.some(proj => proj.name || proj.description) && (
             <div className='section mb-6'>
               <h2 className='text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1'>
@@ -349,7 +339,6 @@ const RightPanel = () => {
             </div>
           )}
 
-          {/* Achievements Section */}
           {achievementsData.length > 0 && achievementsData.some(ach => ach.title) && (
             <div className='section mb-6'>
               <h2 className='text-lg font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-1'>
@@ -377,7 +366,6 @@ const RightPanel = () => {
             </div>
           )}
 
-          {/* Empty state */}
           {!personalInfo.fullName && !experienceData.length && !educationData.length && !hasSkills() && !projectsData.length && !achievementsData.length && (
               <div className='text-center py-12'>
                 <div className='text-gray-400 text-6xl mb-4'>📄</div>

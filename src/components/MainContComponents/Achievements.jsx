@@ -12,11 +12,9 @@ import {
 const Achievements = () => { 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Get data from Redux store
   const dispatch = useAppDispatch();
   const { achievements } = useAppSelector(state => state.achievements);
 
-  // Toggle section visibility
   const toggleSection = () => {
     setIsExpanded(!isExpanded);
   };
@@ -25,22 +23,18 @@ const Achievements = () => {
     dispatch(updateAchievement({ id: achievementId, field, value }));
   };
 
-  // Add new achievement - dispatch Redux action
   const handleAddAchievement = () => {
     dispatch(addAchievement());
   };
 
-  // Remove achievement - dispatch Redux action
   const handleRemoveAchievement = (achievementId) => {
     dispatch(removeAchievement(achievementId));
   };
 
-  // Duplicate achievement - dispatch Redux action
   const handleDuplicateAchievement = (achievementId) => {
     dispatch(duplicateAchievement(achievementId));
   };
 
-  // Bulk add achievements - dispatch Redux action
   const handleBulkAdd = (textContent) => {
     if (textContent.trim()) {
       const achievementTitles = textContent
@@ -54,7 +48,6 @@ const Achievements = () => {
     }
   };
 
-  // Sort achievements - dispatch Redux action
   const handleSortAchievements = (sortBy) => {
     dispatch(sortAchievements(sortBy));
   };
@@ -68,7 +61,6 @@ const Achievements = () => {
     return errors;
   };
 
-  // URL validation helper - keep as is
   const isValidUrl = (string) => {
     try {
       new URL(string);
@@ -78,7 +70,6 @@ const Achievements = () => {
     }
   };
 
-  // Get category color - keep as is
   const getCategoryColor = (category) => {
     const colors = {
       professional: 'bg-blue-100 text-blue-800',
@@ -91,7 +82,6 @@ const Achievements = () => {
     return colors[category] || 'bg-gray-100 text-gray-800';
   };
 
-  // Get importance color - keep as is
   const getImportanceColor = (importance) => {
     const colors = {
       high: 'bg-red-100 text-red-800',
@@ -101,7 +91,6 @@ const Achievements = () => {
     return colors[importance] || 'bg-gray-100 text-gray-800';
   };
 
-  // Achievement categories - keep as is
   const categories = [
     { value: 'professional', label: 'Professional' },
     { value: 'academic', label: 'Academic' },
@@ -111,7 +100,6 @@ const Achievements = () => {
     { value: 'personal', label: 'Personal' }
   ];
 
-  // Importance levels - keep as is
   const importanceLevels = [
     { value: 'high', label: 'High' },
     { value: 'medium', label: 'Medium' },
@@ -120,7 +108,6 @@ const Achievements = () => {
 
   return (
     <div className='mb-6 border border-gray-200 rounded-md'>
-      {/* Header with toggle button */}
       <button 
         className='flex justify-between items-center w-full px-4 py-3 text-left font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-t-md focus:outline-none'
         onClick={toggleSection}
@@ -137,9 +124,7 @@ const Achievements = () => {
         </svg>
       </button>
 
-      {/* Collapsible content */}
       <div className={`px-4 py-3 border-t border-gray-200 ${isExpanded ? 'block' : 'hidden'}`}>
-        {/* Quick actions */}
         <div className='mb-4 flex flex-wrap gap-2'>
           <button
             onClick={() => handleSortAchievements('importance')}
@@ -161,7 +146,6 @@ const Achievements = () => {
           </button>
         </div>
 
-        {/* Bulk add section */}
         <div className='mb-6 p-4 bg-gray-50 rounded-md'>
           <label htmlFor="bulk-achievements" className='block text-sm font-medium text-gray-700 mb-2'>
             Quick Add (one achievement per line)
@@ -181,14 +165,12 @@ const Achievements = () => {
           </p>
         </div>
 
-        {/* Individual achievements */}
         <div id="achievement-items">
           {achievements.map((achievement, index) => {
             const errors = validateAchievement(achievement);
             
             return (
               <div key={achievement.id} className='achievement-item mb-6 pb-6 border-b border-gray-200 last:border-b-0'>
-                {/* Achievement header */}
                 <div className='flex justify-between items-center mb-4'>
                   <div className='flex items-center space-x-3'>
                     <h4 className='font-semibold text-gray-800'>
@@ -226,9 +208,7 @@ const Achievements = () => {
                   </div>
                 </div>
 
-                {/* Achievement form */}
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  {/* Title */}
                   <div className='md:col-span-2'>
                     <label htmlFor={`title-${achievement.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Achievement Title *
@@ -249,7 +229,6 @@ const Achievements = () => {
                     )}
                   </div>
 
-                  {/* Organization */}
                   <div>
                     <label htmlFor={`organization-${achievement.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Organization/Institution
@@ -264,7 +243,6 @@ const Achievements = () => {
                     />
                   </div>
 
-                  {/* Date */}
                   <div>
                     <label htmlFor={`date-${achievement.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Date
@@ -278,7 +256,6 @@ const Achievements = () => {
                     />
                   </div>
 
-                  {/* Category */}
                   <div>
                     <label htmlFor={`category-${achievement.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Category
@@ -295,7 +272,6 @@ const Achievements = () => {
                     </select>
                   </div>
 
-                  {/* Importance */}
                   <div>
                     <label htmlFor={`importance-${achievement.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Importance
@@ -312,7 +288,6 @@ const Achievements = () => {
                     </select>
                   </div>
 
-                  {/* URL */}
                   <div className='md:col-span-2'>
                     <label htmlFor={`url-${achievement.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       URL/Link (optional)
@@ -332,7 +307,6 @@ const Achievements = () => {
                     )}
                   </div>
 
-                  {/* Description */}
                   <div className='md:col-span-2'>
                     <label htmlFor={`description-${achievement.id}`} className='block text-sm font-medium text-gray-700 mb-1'>
                       Description
@@ -352,7 +326,6 @@ const Achievements = () => {
           })}
         </div>
 
-        {/* Add Achievement Button */}
         <button 
           type='button' 
           onClick={handleAddAchievement}
@@ -364,7 +337,6 @@ const Achievements = () => {
           Add Achievement
         </button>
 
-        {/* Achievements summary */}
         <div className='mt-4 p-3 bg-yellow-50 rounded-md'>
           <div className='flex justify-between items-center mb-2'>
             <p className='text-sm text-yellow-700'>
